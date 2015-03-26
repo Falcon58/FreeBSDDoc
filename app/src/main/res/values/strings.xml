@@ -9,6 +9,15 @@
         <item>Menu_6</item>
         <item>Menu_7</item>
     </string-array>
+    <string-array name="doc_text">
+        <item>Text_1</item>
+        <item>Text_2</item>
+        <item>Text_3</item>
+        <item>Text_4</item>
+        <item>Text_5</item>
+        <item>Text_6</item>
+        <item>Text_7</item>
+    </string-array>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
 </resources>
