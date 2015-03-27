@@ -1,0 +1,218 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=koi8-r" /><title>21.2. Обновление FreeBSD</title><link rel="stylesheet" type="text/css" href="docbook.css" /><link rev="made" href="mailto:doc@FreeBSD.org" /><meta name="generator" content="DocBook XSL Stylesheets V1.78.1" /><link rel="home" href="index.html" title="Руководство FreeBSD" /><link rel="up" href="updating-upgrading.html" title="Глава 21. Обновление системы и смена версии" /><link rel="prev" href="updating-upgrading.html" title="Глава 21. Обновление системы и смена версии" /><link rel="next" href="updating-upgrading-portsnap.html" title="21.3. Portsnap: средство обновления Коллекции Портов" /><link rel="copyright" href="legalnotice.html" title="Юридическое уведомление" /><script xmlns="" type="text/javascript" src="/layout/js/google.js"></script></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">21.2. Обновление FreeBSD</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="updating-upgrading.html">Пред.</a> </td><th width="60%" align="center">Глава 21. Обновление системы и смена версии</th><td width="20%" align="right"> <a accesskey="n" href="updating-upgrading-portsnap.html">След.</a></td></tr></table><hr /></div><div class="sect1"><div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both"><a id="updating-upgrading-freebsdupdate"></a>21.2. Обновление FreeBSD</h2></div><div><span class="authorgroup">Оригинальный текст написал <span xmlns="http://www.w3.org/1999/xhtml" class="author"><span class="firstname">Tom</span> <span class="surname">Rhodes</span></span>. </span></div><div><span class="authorgroup">На основе заметок, которые предоставил  <span xmlns="http://www.w3.org/1999/xhtml" class="author"><span class="firstname">Colin</span> <span class="surname">Percival</span></span>. </span></div></div></div><a id="idp89098960" class="indexterm"></a><a id="idp89099472" class="indexterm"></a><p>Применение обновлений безопасности - важный момент в
+    сопровождении программного обеспечения, особенно такого как
+    операционная система.  Для FreeBSD этот процесс не был простым в
+    течение долгого времени.  На исходный код нужно было накладывать
+    патчи, перестраивать код в двоичные файлы, а затем эти двоичные файлы
+    требовалось переустановить. </p><p>Теперь это давно не так, и FreeBSD включает программу с простым
+    названием <code class="command">freebsd-update</code>.  Эта программа
+    предоставляет две различные функции.  Во-первых, она позволяет
+    применить к базовой системе FreeBSD обновления безопасности и критические
+    исправления в двоичном виде, без необходимости сборки и установки.
+    Во-вторых, программа поддерживает обновление системы со сменой
+    старшего или младшего номера версии.</p><div xmlns="" class="note"><h3 class="admontitle">Примечание: </h3><p xmlns="http://www.w3.org/1999/xhtml">Двоичные обновления доступны для всех архитектур и версий,
+    поддерживаемых группой безопасности; тем не менее, для работы
+    некоторых из возможностей, таких как смена версии операционной
+    системы FreeBSD, требуется последняя версия <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=freebsd-update&amp;sektion=8"><span class="citerefentry"><span class="refentrytitle">freebsd-update</span>(8)</span></a>
+    и по крайней мере FreeBSD 6.3.  Перед обновлением до новой версии
+    следует ознакомиться с объявлением о выпуске текущей версии, так
+    как там может содержаться важная информация, применимая к версии,
+    на которую намечен переход.  С соответствующими объявлениями можно
+    ознакомиться, перейдя по следующей ссылке: <code class="uri"><a class="uri" href="http://www.FreeBSD.org/releases/" target="_top">http://www.FreeBSD.org/releases/</a></code>.</p></div><p>Если имеется задание <code class="command">crontab</code>, запускающее
+    <code class="command">freebsd-update</code>, то перед началом выполнения
+    следующих действий его обязательно нужно выключить.</p><div class="sect2"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="idp89113296"></a>21.2.1. Конфигурационный файл</h3></div></div></div><p>Некоторые пользователи могут пожелать изменить
+    конфигурационный файл для лучшего контроля над процессом
+    обновления.  Все параметры подробно задокументированы, но
+    для некоторых из них может понадобиться дополнительное
+    разъяснение:</p><pre class="programlisting"># Components of the base system which should be kept updated.
+Components src world kernel</pre><p>Данный параметр определяет, какие части FreeBSD будут обновлены.
+    По умолчанию обновляется исходный код (src), вся базовая система
+    (world) и ядро (kernel).  Компоненты те же самые, что и во время
+    установки; в частности, добавление "world/games" позволяет
+    обновить игры.  Использование "src/bin" позволяет обновить
+    исходный код в <code class="filename">src/bin</code>.</p><p>Лучшим вариантом будет оставить всё как есть, поскольку
+    изменение этого перечня с целью добавления особых пунктов
+    потребует от пользователя указания подряд всех пунктов, которые
+    пользователь захочет обновить.  Это может привести к негативным
+    последствиям из-за возможной рассинхронизации между исходными
+    текстами и двоичными файлами.</p><pre class="programlisting"># Paths which start with anything matching an entry in an IgnorePaths
+# statement will be ignored.
+IgnorePaths</pre><p>Добавьте сюда пути к каталогам (например, <code class="filename">/bin</code> или <code class="filename">/sbin</code>), которые вы хотели бы
+    оставить нетронутыми в процессе обновления.  Этот параметр можно
+    использовать для предотвращения перезаписывания локальных
+    изменений программой <code class="command">freebsd-update</code>.</p><pre class="programlisting"># Paths which start with anything matching an entry in an UpdateIfUnmodified
+# statement will only be updated if the contents of the file have not been
+# modified by the user (unless changes are merged; see below).
+UpdateIfUnmodified /etc/ /var/ /root/ /.cshrc /.profile</pre><p>Обновлять конфигурационные файлы в указанных каталогах, только
+    если они не содержат изменений.  При наличии каких-либо изменений
+    со стороны пользователя автоматическое обновление таких файлов
+    отменяется.  Есть другой параметр
+    <code class="literal">KeepModifiedMetadata</code>, который предписывает
+    команде <code class="command">freebsd-update</code> сохранять изменения во
+    время процесса слияния.</p><pre class="programlisting"># When upgrading to a new FreeBSD release, files which match MergeChanges
+# will have any local changes merged into the version from the new release.
+MergeChanges /etc/ /var/named/etc/</pre><p>Список каталогов с конфигурационными файлами, для которых
+    <code class="command">freebsd-update</code> попытается выполнить слияние.
+    Процесс слияния файла представляет собой набор изменений
+    в формате <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=diff&amp;sektion=1"><span class="citerefentry"><span class="refentrytitle">diff</span>(1)</span></a>, похож на <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=mergemaster&amp;sektion=8"><span class="citerefentry"><span class="refentrytitle">mergemaster</span>(8)</span></a>, но с
+    меньшим количеством параметров: результат слияния принимается,
+    открывается редактор или <code class="command">freebsd-update</code>
+    прекращает свою работу.  В случае сомнений сделайте резервную
+    копию <code class="filename">/etc</code> и просто
+    согласитесь со всеми изменениями.  Для получения подробной
+    информации по команде <code class="command">mergemaster</code> смотрите
+    <a class="xref" href="makeworld.html#mergemaster" title="21.6.11.1. mergemaster">Раздел 21.6.11.1, <<<code class="command">mergemaster</code>>></a>.</p><pre class="programlisting"># Directory in which to store downloaded updates and temporary
+# files used by FreeBSD Update.
+# WorkDir /var/db/freebsd-update</pre><p>Этот каталог предназначен для размещения патчей и временных
+    файлов.  В случае, когда пользователь выполняет обновление со сменой
+    версии, в этом месте должен иметь по крайней мере гигабайт дискового
+    пространства.</p><pre class="programlisting"># When upgrading between releases, should the list of Components be
+# read strictly (StrictComponents yes) or merely as a list of components
+# which *might* be installed of which FreeBSD Update should figure out
+# which actually are installed and upgrade those (StrictComponents no)?
+# StrictComponents no</pre><p>Если выставлено значение <code class="literal">yes</code>, то
+    <code class="command">freebsd-update</code> будет исходить из того, что
+    список <code class="literal">Components</code> является полным, и не будет
+    пытаться выполнить изменения за пределами этого списка.
+    В действительности <code class="command">freebsd-update</code> попытается
+    обновить все файлы, которые принадлежат списку
+    <code class="literal">Components</code>.</p></div><div class="sect2"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="idp89127504"></a>21.2.2. Обновления безопасности</h3></div></div></div><p>Обновления безопасности хранятся на удалённой машине и могут
+    быть загружены и установлены с использованием следующей
+    команды:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>freebsd-update fetch</code></strong>
+<code class="prompt">#</code> <strong class="userinput"><code>freebsd-update install</code></strong></pre><p>Если были установлены обновления ядра, то после этого
+    нужно перезагрузить систему.  Если все пошло хорошо, система
+    должна быть с установленными исправлениями, и
+    <code class="command">freebsd-update</code> можно запускать в качестве ночного
+    задания <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=cron&amp;sektion=8"><span class="citerefentry"><span class="refentrytitle">cron</span>(8)</span></a>.  Для этого достаточно добавить следующую
+    запись в <code class="filename">/etc/crontab</code>:</p><pre class="programlisting">@daily                                  root    freebsd-update cron</pre><p>Эта запись означает, что <code class="command">freebsd-update</code> будет
+    запускаться ежедневно.  В данном случае, в соответствии с аргументом
+    <code class="option">cron</code> <code class="command">freebsd-update</code> ограничится
+    проверкой доступных обновлений.  В случае наличия обновлений они
+    будут автоматически загружены и сохранены на локальном диске.
+    Пользователю <code class="systemitem">root</code> будет отправлено
+    соответствующее письмо, так что эти обновления можно будет
+    установить самостоятельно.</p><p>На случай, если что-то пошло не так, в
+    <code class="command">freebsd-update</code> предусмотрен механизм возврата
+    последнего набора изменений с использованием следующей команды:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>freebsd-update rollback</code></strong></pre><p>Если после завершения всех действий было изменено ядро или
+    какой-либо из его модулей, система должна быть перезагружена.
+    Это позволит FreeBSD загрузить новые двоичные файлы в память.</p><div xmlns="" class="note"><h3 class="admontitle">Примечание: </h3><p xmlns="http://www.w3.org/1999/xhtml">Команда <code class="command">freebsd-update</code> работает только
+    с ядром <code class="filename">GENERIC</code>.  Если в
+    <code class="filename">GENERIC</code> присутствуют изменения или
+    используется собственная конфигурация ядра,
+    <code class="command">freebsd-update</code> завершится неудачно.</p></div></div><div class="sect2"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="idp89147472"></a>21.2.3. Обновления со сменой старшей и младшей версий</h3></div></div></div><p>Этот процесс удаляет старые объектные файлы и библиотеки, что
+    может нарушить работу большинства сторонних приложений.  Все
+    установленные порты рекомендуется либо удалить и переустановить
+    заново, либо обновить с использованием программы <a xmlns="" class="package" href="http://www.freebsd.org/cgi/url.cgi?ports/ports-mgmt/portupgrade/pkg-descr">ports-mgmt/portupgrade</a>.  Большинство
+    пользователей предпочтут выполнить тестовое построение, запустив для
+    этого следующую команду:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>portupgrade -af</code></strong></pre><p>Это позволит убедиться в том, что всё будет переустановлено
+    правильно.  Обратите внимание, что если переменной окружения
+    <code class="varname">BATCH</code> присвоить значение <code class="literal">yes</code>,
+    то на все вопросы в течение этого процесса будет возвращаться
+    ответ <code class="literal">yes</code>, что позволит исключить необходимость
+    ручного вмешательства в процесс построения.</p><p>Обновления со сменой старшей и младшей версий можно выполнить,
+    указав значение версии, на которую будет произведен переход, в
+    качестве аргумента команды <code class="command">freebsd-update</code>.
+    Так, например, можно выполнить обновление до версии
+    FreeBSD 6.3:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>freebsd-update -r 6.3-RELEASE upgrade</code></strong></pre><p>После своего запуска <code class="command">freebsd-update</code>
+    анализирует содержимое конфигурационного файла и собирает
+    необходимую для проведения обновления информацию о текущей
+    установленной системе.  На экран будет выдан перечень компонентов,
+    которые удалось и не удалось обнаружить установленными.
+    Например:</p><pre class="screen">Looking up update.FreeBSD.org mirrors... 1 mirrors found.
+Fetching metadata signature for 6.3-BETA1 from update1.FreeBSD.org... done.
+Fetching metadata index... done.
+Inspecting system... done.
+
+The following components of FreeBSD seem to be installed:
+kernel/smp src/base src/bin src/contrib src/crypto src/etc src/games
+src/gnu src/include src/krb5 src/lib src/libexec src/release src/rescue
+src/sbin src/secure src/share src/sys src/tools src/ubin src/usbin
+world/base world/info world/lib32 world/manpages
+
+The following components of FreeBSD do not seem to be installed:
+kernel/generic world/catpages world/dict world/doc world/games
+world/proflibs
+
+Does this look reasonable (y/n)? y</pre><p>Следующим шагом <code class="command">freebsd-update</code> попытается
+    загрузить по сети файлы, необходимые для выполнения обновления.
+    В некоторых случаях может потребоваться ответить на вопросы
+    относительно того, что и как устанавливать.</p><p>После того, как все изменения были загружены, они будут
+    применены.  Этот процесс может занять определённое время, в
+    зависимости от производительности и текущей загруженности
+    компьютера.  Затем будет выполнено слияние конфигурационных файлов
+    - эта часть процесса требует от пользователя определённого
+    вмешательства, так как для файла можно выполнить слияние
+    автоматически, а можно открыть текстовый редактор для слияния
+    вручную.  Результат успешного слияния будет показан на экране.
+    Неудачное или пропущенное слияние вызовет преждевременное завершение
+    программы.  Можно подготовить резервную копию каталога <code class="filename">/etc</code> для таких важных файлов как
+    <code class="filename">master.passwd</code> и <code class="filename">group</code> и
+    выполнить их слияние вручную позднее.</p><div xmlns="" class="note"><h3 class="admontitle">Примечание: </h3><p xmlns="http://www.w3.org/1999/xhtml">На данном этапе система еще не модифицирована, и все изменения
+    и слияния происходят в отдельном каталоге.  Теперь, когда все
+    изменения успешно применены, все конфигурационные файлы слиты и
+    кажется, что процесс должен пройти плавно, пользователь должен
+    установить изменения.</p></div><p>После завершения этого процесса, изменения могут быть
+    установлены на диск с помощью следующей команды.</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>freebsd-update install</code></strong></pre><p>В первую очередь изменения будут применены к ядру и его модулям.
+    После этого компьютер должен быть перезагружен.  Следующая команда
+    выполнит перезагрузку компьютера, после чего будет загружено новое
+    ядро:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>shutdown -r now</code></strong></pre><p>После перезагрузки нужно повторно запустить команду
+    <code class="command">freebsd-update</code>.  Команда прочитает, на каком
+    этапе она находится, и перейдёт к удалению старых объектных файлов
+    и совместно используемых библиотек.  Чтобы перейти к этому этапу,
+    выполните следующую команду:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>freebsd-update install</code></strong></pre><div xmlns="" class="note"><h3 class="admontitle">Примечание: </h3><p xmlns="http://www.w3.org/1999/xhtml">Количество этапов установки обновлений может быть два вместо
+    трёх и зависит от того, были ли изменены номера версий каких-либо
+    совместно используемых библиотек.</p></div><p>Теперь понадобится пересобрать и переустановить всё стороннее
+    программное обеспечение.  Это необходимая операция, так как
+    установленное программное обеспечение может зависеть от библиотек,
+    которые были удалены в процессе смены версии операционной системы.
+    Для автоматизации этого процесса можно воспользоваться командой
+    <a xmlns="" class="package" href="http://www.freebsd.org/cgi/url.cgi?ports/ports-mgmt/portupgrade/pkg-descr">ports-mgmt/portupgrade</a>.
+    Начать можно со следующих команд:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>portupgrade -f ruby</code></strong>
+<code class="prompt">#</code> <strong class="userinput"><code>rm /var/db/pkg/pkgdb.db</code></strong>
+<code class="prompt">#</code> <strong class="userinput"><code>portupgrade -f ruby18-bdb</code></strong>
+<code class="prompt">#</code> <strong class="userinput"><code>rm /var/db/pkg/pkgdb.db /usr/ports/INDEX-*.db</code></strong>
+<code class="prompt">#</code> <strong class="userinput"><code>portupgrade -af</code></strong></pre><p>После этого завершите процесс обновления последним запуском
+    <code class="command">freebsd-update</code>.  Выполните следующую команду,
+    чтобы убедиться, что ничего не забыто в процессе обновления:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>freebsd-update install</code></strong></pre><p>Перезагрузите компьютер с новой версией FreeBSD.  На этом процесс
+    завершён.</p></div><div class="sect2"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="idp89189968"></a>21.2.4. Сравнение состояния системы</h3></div></div></div><p>Утилита <code class="command">freebsd-update</code> может быть
+    использована для проверки состояния установленной версии FreeBSD
+    относительно известной хорошей копии.  Оценивается текущая версия
+    системных утилит, библиотек и конфигурационных файлов.  Для того,
+    чтобы начать сравнение, выполните следующую команду:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>freebsd-update IDS &gt;&gt; outfile.ids</code></strong></pre><div xmlns="" class="warning"><h3 class="admontitle">Предупреждение: </h3><p xmlns="http://www.w3.org/1999/xhtml">Не смотря на то, что команда называется
+    <acronym class="acronym">IDS</acronym>, это ни в коей мере не должно являться
+    заменой системе обнаружения вторжений, такой как <a xmlns="" class="package" href="http://www.freebsd.org/cgi/url.cgi?ports/security/snort/pkg-descr">security/snort</a>.  Поскольку
+    <code class="command">freebsd-update</code> сохраняет свои данные на
+    диске, возможность подмены становится очевидной.  И хотя эта
+    возможность может быть уменьшена при использовании настройки
+    <code class="varname">kern.securelevel</code>, а также используя для
+    записи данных <code class="command">freebsd-update</code> файловую
+    систему, которая в остальное время смонтирована только на
+    чтение, лучшим решением будет сравнить систему относительно
+    эталона на физически защищенном носителе, таком как
+    <acronym class="acronym">DVD</acronym> или внешний <acronym class="acronym">USB</acronym> диск
+    с включённой защитой от записи.</p></div><p>Теперь запустится проверка системы, в результате которой будет
+    выведен список файлов с их контрольными суммами в <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=sha256&amp;sektion=1"><span class="citerefentry"><span class="refentrytitle">sha256</span>(1)</span></a> с
+    известным значением для файла из релиза и значением для текущего
+    в системе.  Результат выводится слишком быстро для наглядного
+    сравнения и вскоре заполняет консольный буфер.  По этой причине в
+    данном примере вывод перенаправлен в файл
+    <code class="filename">outfile.ids</code>.</p><p>Эти строки также очень длинные, но зато такой формат вывода
+    удобен для разбора.  Так, для получения списка всех отличающихся
+    от релиза файлов достаточно выполнить такую команду:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>cat outfile.ids | awk '{ print $1 }' | more</code></strong>
+/etc/master.passwd
+/etc/motd
+/etc/passwd
+/etc/pf.conf</pre><p>Вывод специально обрезан, на самом деле файлов намного больше.
+    Некоторые из них изменены в ходе нормальной работы: так, файл
+    <code class="filename">/etc/passwd</code> был изменён после заведения
+    пользователей в системе.  В некоторых случаях могут быть и другие
+    файлы, такие как модули ядра, которые могли измениться вследствие
+    обновления через <code class="command">freebsd-update</code>.  Для
+    исключения из проверки конкретных файлов и каталогов укажите их
+    в качестве значения параметра <code class="literal">IDSIgnorePaths</code>
+    в <code class="filename">/etc/freebsd-update.conf</code>.</p><p>Эта система может использоваться как часть более сложной
+    процедуры обновления, в отличие от описанного выше способа.</p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="updating-upgrading.html">Пред.</a> </td><td width="20%" align="center"><a accesskey="u" href="updating-upgrading.html">Наверх</a></td><td width="40%" align="right"> <a accesskey="n" href="updating-upgrading-portsnap.html">След.</a></td></tr><tr><td width="40%" align="left" valign="top">Глава 21. Обновление системы и смена версии </td><td width="20%" align="center"><a accesskey="h" href="index.html">Начало</a></td><td width="40%" align="right" valign="top"> 21.3. Portsnap: средство обновления Коллекции Портов</td></tr></table></div><p xmlns="http://www.w3.org/TR/xhtml1/transitional" align="center"><small>Этот, и другие документы, могут быть скачаны с
+    <a href="http://ftp.FreeBSD.org/pub/FreeBSD/doc/">http://ftp.FreeBSD.org/pub/FreeBSD/doc/</a>.</small></p><p xmlns="http://www.w3.org/TR/xhtml1/transitional" align="center"><small>По вопросам, связанным с FreeBSD, прочитайте
+    <a href="http://www.FreeBSD.org/ru/docs.html">документацию</a> прежде чем писать в
+    &lt;<a href="mailto:questions@FreeBSD.org">questions@FreeBSD.org</a>&gt;.<br></br>
+    По вопросам, связанным с этой документацией, пишите в рассылку
+    &lt;<a href="mailto:doc@FreeBSD.org">doc@FreeBSD.org</a>&gt;.<br></br></small></p></body></html>

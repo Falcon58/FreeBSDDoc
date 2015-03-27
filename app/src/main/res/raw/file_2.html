@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=koi8-r" /><title>12.3. Основные настройки</title><link rel="stylesheet" type="text/css" href="docbook.css" /><link rev="made" href="mailto:doc@FreeBSD.org" /><meta name="generator" content="DocBook XSL Stylesheets V1.78.1" /><link rel="home" href="index.html" title="Руководство FreeBSD" /><link rel="up" href="config-tuning.html" title="Глава 12. Настройка и оптимизация" /><link rel="prev" href="configtuning-initial.html" title="12.2. Начальное конфигурирование" /><link rel="next" href="configtuning-appconfig.html" title="12.4. Настройка приложений" /><link rel="copyright" href="legalnotice.html" title="Юридическое уведомление" /><script xmlns="" type="text/javascript" src="/layout/js/google.js"></script></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">12.3. Основные настройки</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="configtuning-initial.html">Пред.</a> </td><th width="60%" align="center">Глава 12. Настройка и оптимизация</th><td width="20%" align="right"> <a accesskey="n" href="configtuning-appconfig.html">След.</a></td></tr></table><hr /></div><div class="sect1"><div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both"><a id="configtuning-core-configuration"></a>12.3. Основные настройки</h2></div></div></div><a id="idp82232016" class="indexterm"></a><p>Основные настройки системы располагаются в
+    <code class="filename">/etc/rc.conf</code>.  Этот файл вмещает широкий спектр
+    конфигурационной информации, используемой при загрузке системы.
+    Имя этого файла прямо отражает его назначение, это файл настройки
+    для файлов <code class="filename">rc*</code>.</p><p>Администратор должен сделать записи в
+    <code class="filename">rc.conf</code>, чтобы переопределить строки по умолчанию из
+    <code class="filename">/etc/defaults/rc.conf</code>.  Файлы по умолчанию нельзя
+    копировать в <code class="filename">/etc</code> - они вмещают значения по
+    умолчанию, а не примеры значений.  Все специфичные для данной системы
+    изменения должны быть сделаны в файле
+    <code class="filename">rc.conf</code>.</p><p>Существует несколько методов для отделения общей конфигурации для
+    группы систем от конкретной для данной системы в целях уменьшения объема
+    работы администратора.  Рекомендуемый метод
+    - прописать общую конфигурацию в отдельный файл, например, в
+    <code class="filename">/etc/rc.conf.site</code>, и включить его название в
+    <code class="filename">/etc/rc.conf</code>, который вмещает только специфичную
+    для данной системы информацию.</p><p>Поскольку <code class="filename">rc.conf</code> читается
+    <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=sh&amp;sektion=1"><span class="citerefentry"><span class="refentrytitle">sh</span>(1)</span></a>, есть тривиальный способ сделать это. Например:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>rc.conf:</p><pre class="programlisting">	. /etc/rc.conf.site
+	hostname="node15.example.com"
+	network_interfaces="fxp0 lo0"
+	ifconfig_fxp0="inet 10.1.1.1"</pre></li><li class="listitem"><p>rc.conf.site:</p><pre class="programlisting">	defaultrouter="10.1.1.254"
+	saver="daemon"
+	blanktime="100"</pre></li></ul></div><p>Файл <code class="filename">rc.conf.site</code> может быть распространён
+    на все системы, используя <code class="command">rsync</code> или подобную ей
+    программу, в то время, как <code class="filename">rc.conf</code> должен остаться
+    только на одной машине.</p><p>Обновление системы с помощью <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=sysinstall&amp;sektion=8"><span class="citerefentry"><span class="refentrytitle">sysinstall</span>(8)</span></a>
+    или <code class="command">make world</code> не повлекут за собой перезапись
+    <code class="filename">rc.conf</code>.  Вся информация в этом файле
+    сохранится.</p></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="configtuning-initial.html">Пред.</a> </td><td width="20%" align="center"><a accesskey="u" href="config-tuning.html">Наверх</a></td><td width="40%" align="right"> <a accesskey="n" href="configtuning-appconfig.html">След.</a></td></tr><tr><td width="40%" align="left" valign="top">12.2. Начальное конфигурирование </td><td width="20%" align="center"><a accesskey="h" href="index.html">Начало</a></td><td width="40%" align="right" valign="top"> 12.4. Настройка приложений</td></tr></table></div><p xmlns="http://www.w3.org/TR/xhtml1/transitional" align="center"><small>Этот, и другие документы, могут быть скачаны с
+    <a href="http://ftp.FreeBSD.org/pub/FreeBSD/doc/">http://ftp.FreeBSD.org/pub/FreeBSD/doc/</a>.</small></p><p xmlns="http://www.w3.org/TR/xhtml1/transitional" align="center"><small>По вопросам, связанным с FreeBSD, прочитайте
+    <a href="http://www.FreeBSD.org/ru/docs.html">документацию</a> прежде чем писать в
+    &lt;<a href="mailto:questions@FreeBSD.org">questions@FreeBSD.org</a>&gt;.<br></br>
+    По вопросам, связанным с этой документацией, пишите в рассылку
+    &lt;<a href="mailto:doc@FreeBSD.org">doc@FreeBSD.org</a>&gt;.<br></br></small></p></body></html>

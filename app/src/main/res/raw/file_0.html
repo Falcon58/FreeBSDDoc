@@ -1,0 +1,371 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>5.6. Использование Коллекции Портов</title><link rel="stylesheet" type="text/css" href="docbook.css" /><link rev="made" href="mailto:doc@FreeBSD.org" /><meta name="generator" content="DocBook XSL Stylesheets V1.78.1" /><link rel="home" href="index.html" title="Руководство FreeBSD" /><link rel="up" href="ports.html" title="Глава 5. Установка приложений: порты и пакеты" /><link rel="prev" href="pkgng-intro.html" title="5.5. Использование pkgng для управления бинарными пакетами" /><link rel="next" href="ports-nextsteps.html" title="5.7. Действия после установки" /><link rel="copyright" href="legalnotice.html" title="Юридическое уведомление" /><script xmlns="" type="text/javascript" src="/layout/js/google.js"></script></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">5.6. Использование Коллекции Портов</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="pkgng-intro.html">Пред.</a> </td><th width="60%" align="center">Глава 5. Установка приложений: порты и пакеты</th><td width="20%" align="right"> <a accesskey="n" href="ports-nextsteps.html">След.</a></td></tr></table><hr /></div><div class="sect1"><div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both"><a id="ports-using"></a>5.6. Использование Коллекции Портов</h2></div></div></div><p>В этом разделе даны базовые сведения по использованию Коллекции
+      Портов для установки или удаления программ.  Детальное описание
+      существующих целей <code class="command">make</code> и переменных окружения
+      находится в <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=ports&amp;sektion=7"><span class="citerefentry"><span class="refentrytitle">ports</span>(7)</span></a>.</p><div xmlns="" class="warning"><h3 class="admontitle">Предупреждение: </h3><p xmlns="http://www.w3.org/1999/xhtml">В июле 2012 года проект Портов FreeBSD сменил систему контроля версий:
+	на смену CVS пришел Subversion.  Рекомендуемым способом работы с
+	деревом портов является <span class="application">Portsnap</span>.
+	Пользователи, которым требуется локальная подгонка портов
+	(то есть, поддержание дополнительных локальных патчей), возможно
+	предпочтут непосредственное использование Subversion.  28 февраля
+	2013 года сервис <span class="application">CVSup</span> был выведен из
+	эксплуатации, и дальнейшее использование последнего не
+	рекомендуется.</p></div><div class="sect2"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ports-tree"></a>5.6.1. Получение Коллекции Портов</h3></div></div></div><p>Коллекция Портов - это набор файлов, состоящий из
+	<code class="filename">Makefile</code>, патчей и файлов описаний, хранимых в
+	<code class="filename">/usr/ports</code>.  Этот набор файлов предназначен для
+	построения и установки приложений во FreeBSD.  В нижеследующих разделах
+	описано несколько способов получения Коллекции Портов на тот случай,
+	если Коллекция не была установлена во время инсталляции FreeBSD.</p><div class="procedure"><a id="idp76101328"></a><div class="procedure-title">Процедура 5.1. Метод Portsnap</div><p><span class="application">Portsnap</span> это быстрый и удобный
+	  инструмент для получения Коллекции Портов, и в то же время -
+	  предпочитаемый выбор большинства пользователей.  За подробным
+	  описанием всех возможностей <span class="application">Portsnap</span>
+	  обратитесь к <a class="link" href="updating-upgrading-portsnap.html" title="21.3. Portsnap: средство обновления Коллекции Портов">Using Portsnap</a>.</p><ol class="procedure" type="1"><li class="step"><p>Скачайте сжатый снэпшот Коллекции Портов в
+	    <code class="filename">/var/db/portsnap</code>.</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>portsnap fetch</code></strong></pre></li><li class="step"><p>Если вы запускаете <span class="application">Portsnap</span>
+	    впервые, извлеките снэпшот в
+	    <code class="filename">/usr/ports</code>:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>portsnap extract</code></strong></pre></li><li class="step"><p>По завершении первого запуска
+	    <span class="application">Portsnap</span>, как было показано выше,
+	    <code class="filename">/usr/ports</code> может быть
+	    обновлен при помощи:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>portsnap fetch</code></strong>
+<code class="prompt">#</code> <strong class="userinput"><code>portsnap update</code></strong></pre></li></ol></div><div class="procedure"><a id="idp76115664"></a><div class="procedure-title">Процедура 5.2. Метод Subversion</div><p>Если необходим контроль за деревом портов (например, для
+	  поддержания локальных изменений), то для получения Коллекции Портов
+	  может быть задействован <span class="application">Subversion</span>.
+	  Обратитесь к <a class="link" href="../../../../doc/en_US.ISO8859-1/articles/committers-guide/subversion-primer.html" target="_top">Subversion Primer</a>
+	  за детальным описанием <span class="application">Subversion</span>.</p><ol class="procedure" type="1"><li class="step"><p>Для создания рабочей копии дерева портов необходимо
+	    иметь установленный <span class="application">Subversion</span>.
+	    Если порты есть в наличии, то установите
+	    <span class="application">Subversion</span> выполнив следующее:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>cd /usr/ports/devel/subversion</code></strong>
+<code class="prompt">#</code> <strong class="userinput"><code>make install clean</code></strong></pre><p>Если портов нет, то <span class="application">Subversion</span> может
+	    быть установлен при помощи системы пакетов:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>pkg_add -r subversion</code></strong></pre><p>Если же для управления пакетами используется
+	    <span class="application">pkgng</span>, то
+	    <span class="application">Subversion</span> устанавливается при помощи
+	    следующей команды:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>pkg install subversion</code></strong></pre></li><li class="step"><p>Создайте рабочую копию дерева портов.  Для ускорения
+	    процесса вместо <em class="replaceable"><code>svn0.us-east.FreeBSD.org</code></em>
+	    укажите ближайшее к вам
+	    <a class="link" href="../../../../doc/en_US.ISO8859-1/books/handbook/svn-mirrors.html" target="_top">зеркало
+	      Subversion</a>.  Коммиттерам необходимо сначала прочитать
+	    <a class="link" href="../../../../doc/en_US.ISO8859-1/articles/committers-guide/subversion-primer.html" target="_top">Subversion Primer</a>,
+	    чтобы удостовериться, что выбран корректный протокол.</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>svn checkout https://<em class="replaceable"><code>svn0.us-east.FreeBSD.org</code></em>/ports/head /usr/ports</code></strong></pre></li><li class="step"><p>При наличии рабочей копии
+	    <code class="filename">/usr/ports</code>
+	    все последующие обновления выполняются просто:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>svn update /usr/ports</code></strong></pre></li></ol></div><div class="procedure"><a id="idp76134864"></a><div class="procedure-title">Процедура 5.3. Метод с использованием Sysinstall</div><p>Этот метод подразумевает использование
+	  <span class="application">sysinstall</span> для установки Коллекции Портов
+	  из установочного носителя.  Учтите, что в итоге будет установлена
+	  старая копия Коллекции Портов, которая была актуальна на момент
+	  создания релиза.  Если у вас есть подключение к Интернет, то вам
+	  необходимо пользоваться одним из вышеупомянутых методов.</p><ol class="procedure" type="1"><li class="step"><p>Работая как пользователь <code class="systemitem">root</code>, запустите
+            <code class="command">sysinstall</code> так, как это показано
+            ниже:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>sysinstall</code></strong></pre></li><li class="step"><p>Опуститесь вниз и выберите
+            <span class="guimenuitem">Configure</span>, нажмите
+            <span class="keycap"><strong>Enter</strong></span></p></li><li class="step"><p>Опуститесь вниз и выберите
+            <span class="guimenuitem">Distributions</span>,
+            затем нажмите <span class="keycap"><strong>Enter</strong></span></p></li><li class="step"><p>Опуститесь вниз к пункту <span class="guimenuitem">ports</span>,
+            нажмите клавишу <span class="keycap"><strong>Пробел</strong></span></p></li><li class="step"><p>Поднимитесь вверх к <span class="guimenuitem">Exit</span>, нажмите
+            <span class="keycap"><strong>Enter</strong></span></p></li><li class="step"><p>Выберите желаемый носитель для установки, например, CDROM,
+	    FTP и так далее.</p></li><li class="step"><p>Перейдите на пункт меню <span class="guimenuitem">Exit</span> и
+            нажмите <span class="keycap"><strong>Enter</strong></span>.</p></li><li class="step"><p>Нажмите <span class="keycap"><strong>X</strong></span> для выхода из
+            <span class="application">sysinstall</span>.</p></li></ol></div></div><div class="sect2"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="cvsup-migration"></a>5.6.2. Миграция с
+	<span class="application">CVSup</span>/<span class="application">csup</span>
+	на <span class="application">portsnap</span></h3></div></div></div><div xmlns="" class="warning"><h3 class="admontitle">Предупреждение: </h3><p xmlns="http://www.w3.org/1999/xhtml">Начиная с 28 февраля 2013 года дерево портов более не
+	  экспортируется в <span class="application">CVS</span>, поэтому
+	  <span class="application">CVSup</span> и <span class="application">csup</span>
+	  не будут доставлять обновления для дерева портов.</p></div><div class="procedure"><a id="idp76156880"></a><div class="procedure-title">Процедура 5.4. Миграция на Portsnap</div><p>Для миграции потребуется около 1 ГБ дискового пространства
+	  в <code class="filename">/usr</code>, в добавок, для
+	  <span class="application">Portsnap</span> необходимо около 150 МБ
+	  дискового пространства в
+	  <code class="filename">/var</code>.</p><ol class="procedure" type="1"><li class="step"><p>Если у вас настроено автоматическое обновление портов,
+	    например при помощи задания <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=cron&amp;sektion=8"><span class="citerefentry"><span class="refentrytitle">cron</span>(8)</span></a>, запускающего
+	    <span class="application">CVSup</span> или
+	    <span class="application">csup</span>, то его необходимо будет
+	    отключить.</p></li><li class="step"><p>Переместите существующее дерево портов во временный
+	    каталог:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>mv /usr/ports /usr/ports.old</code></strong></pre></li><li class="step"><p>При помощи <span class="application">Portsnap</span> скачайте
+	    новое дерево портов и извлеките его в
+	    <code class="filename">/usr/ports</code>:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>portsnap fetch extract</code></strong></pre></li><li class="step"><p>Переместите дистрибутивные файлы (distfiles) и сохраненные
+	    пакеты в новое дерево портов:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>mv /usr/ports.old/distfiles /usr/ports</code></strong>
+<code class="prompt">#</code> <strong class="userinput"><code>mv /usr/ports.old/packages /usr/ports</code></strong></pre></li><li class="step"><p>Удалите старое дерево портов:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>rm -rf /usr/ports.old</code></strong></pre></li><li class="step"><p>Если ранее использовался <span class="application">CVSup</span>,
+	    то сейчас его можно удалить:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>pkg_delete -r -v cvsup-without-gui-\*</code></strong></pre><p>Пользователям <span class="application">pkgng</span> необходимо
+	    запустить следующую команду:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>pkg delete cvsup-without-gui</code></strong></pre></li></ol></div><p>За дальнейшим описанием утилиты
+	<span class="application">Portsnap</span> и деталей работы с ней
+	обратитесь к <a class="link" href="updating-upgrading-portsnap.html" title="21.3. Portsnap: средство обновления Коллекции Портов">Using
+	  Portsnap</a>.</p></div><div class="sect2"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ports-skeleton"></a>5.6.3. Установка портов</h3></div></div></div><a id="idp76184528" class="indexterm"></a><p>Скелетом порта является набор файлов, который указывает вашей
+	системе FreeBSD, как откомпилировать и установить программу.  Скелет
+	каждого порта включает:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="filename">Makefile</code>: этот файл содержит различные
+	    директивы, которые определяют, как приложение должно быть
+	    откомпилировано и куда в вашей системе оно должно быть
+	    установлено.</p></li><li class="listitem"><p><code class="filename">distinfo</code>: этот файл содержит информацию
+	    о файлах, которые должны быть загружены для сборки порта, а также
+	    их контрольные суммы (<a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=sha256&amp;sektion=1"><span class="citerefentry"><span class="refentrytitle">sha256</span>(1)</span></a>) для проверки того, что файлы
+	    не были повреждены в процессе загрузки.</p></li><li class="listitem"><p><code class="filename">files</code>: этот каталог содержит патчи,
+	    необходимые для компиляции и установки программы в вашей системе
+	    FreeBSD.  Этот каталог также может содержать другие файлы,
+	    используемые для построения порта.</p></li><li class="listitem"><p><code class="filename">pkg-descr</code>: этот файл содержит более
+	    подробное описание программы.</p></li><li class="listitem"><p><code class="filename">pkg-plist</code>: это список всех файлов,
+	    которые будут установлены портом.  В нем также содержатся
+	    указания системе портов на удаление определенных файлов во
+	    время удаления порта.</p></li></ul></div><p>В некоторых портах присутствуют и другие файлы, такие, как
+        <code class="filename">pkg-message</code>.  Система портов использует эти файлы
+        для обработки особых ситуаций.  Если вы хотите узнать более подробно
+        об этих файлах и о портах вообще, то обратитесь к <a class="link" href="../../../../doc/ru_RU.KOI8-R/books/porters-handbook/index.html" target="_top">Руководству по созданию
+	портов для FreeBSD</a>.</p><p>Порт не содержит собственно исходного кода, также известного
+	как <span class="quote"><<<span class="quote">дистрибутивный файл</span>>></span> (distfile).  Способ
+	распространения исходного кода определяется предпочтениями автора
+	программы.  Ниже описаны два способа установки порта FreeBSD.</p><div xmlns="" class="note"><h3 class="admontitle">Примечание: </h3><p xmlns="http://www.w3.org/1999/xhtml">Для установки портов вы должны войти в систему как пользователь
+	  <code class="systemitem">root</code>.</p></div><div xmlns="" class="warning"><h3 class="admontitle">Предупреждение: </h3><p xmlns="http://www.w3.org/1999/xhtml">Перед установкой любого порта необходимо убедиться в
+	  наличии свежей Коллекции Портов и заглянуть на <code class="uri"><a class="uri" href="http://vuxml.freebsd.org/" target="_top">http://vuxml.freebsd.org/</a></code>, где могут освещаться
+	  вопросы безопасности, связанные с конкретным портом.  Если у вас
+	  установлен <a xmlns="" class="package" href="http://www.freebsd.org/cgi/url.cgi?ports/ports-mgmt/portaudit/pkg-descr">ports-mgmt/portaudit</a>,
+	  то перед установкой нового порта запустите
+	  <code class="command">portaudit -F</code> для загрузки свежей базы данных
+	  уязвимостей.  Проверка безопасности и обновление базы данных будут
+	  выполняться при ежедневной проверке безопасности системы.
+	  За дальнейшей информацией обратитесь к страницам справочника
+	  <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=portaudit&amp;sektion=1"><span class="citerefentry"><span class="refentrytitle">portaudit</span>(1)</span></a> и <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=periodic&amp;sektion=8"><span class="citerefentry"><span class="refentrytitle">periodic</span>(8)</span></a>.</p></div><p>Использование Коллекции Портов предполагает наличие работающего
+	подключения к Интернет.  В противном случае вам придется раздобыть
+	и поместить копию дистрибутивного файла в каталог
+	<code class="filename">/usr/ports/distfiles</code> вручную.</p><p>Первым делом переместитесь в каталог устанавливаемого
+	порта:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>cd /usr/ports/sysutils/lsof</code></strong></pre><p>Для компиляции (или построения - <span class="quote"><<<span class="quote">build</span>>></span>)
+	порта наберите команду <code class="command">make</code>.  Вы должны увидеть
+	вывод команды, подобный следующему:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>make</code></strong>
+&gt;&gt; lsof_4.57D.freebsd.tar.gz doesn't seem to exist in /usr/ports/distfiles/.
+&gt;&gt; Attempting to fetch from ftp://lsof.itap.purdue.edu/pub/tools/unix/lsof/.
+===&gt;  Extracting for lsof-4.57
+...
+[вывод команды при распаковке опущен]
+...
+&gt;&gt; Checksum OK for lsof_4.57D.freebsd.tar.gz.
+===&gt;  Patching for lsof-4.57
+===&gt;  Applying FreeBSD patches for lsof-4.57
+===&gt;  Configuring for lsof-4.57
+...
+[вывод команды при конфигурации опущен]
+...
+===&gt;  Building for lsof-4.57
+...
+[вывод команды при компиляции опущен]
+...
+<code class="prompt">#</code></pre><p>По завершении компиляции вы снова вернетесь к приглашению
+	командного процессора.  Следующим шагом является установка порта
+	при помощи
+	<code class="command">make install</code>:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>make install</code></strong>
+===&gt;  Installing for lsof-4.57
+...
+[вывод команды при установке опущен]
+...
+===&gt;   Generating temporary packing list
+===&gt;   Compressing manual pages for lsof-4.57
+===&gt;   Registering installation for lsof-4.57
+===&gt;  SECURITY NOTE:
+      This port has installed the following binaries which execute with
+      increased privileges.
+<code class="prompt">#</code></pre><p>На этом этапе, получив приглашение оболочки, вы уже можете
+	запустить установленное приложение.  Так как
+	<code class="command">lsof</code> является программой, которая запускается с
+	повышенными правами, выдаётся предупреждение о безопасности.  Во
+	время построения и установки портов следует обращать внимание на любые
+	возникающие предупреждения.</p><p>Хорошей идеей является удаление рабочего подкаталога, содержащего
+	временные файлы, использовавшиеся во время компиляции.  Такое
+	действие помогает беречь дисковое пространство и минимизирует
+	вероятность возникновения проблем в дальнейшем, при обновлении
+	до более новой версии порта.</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>make clean</code></strong>
+===&gt;  Cleaning for lsof-4.57
+<code class="prompt">#</code></pre><div xmlns="" class="note"><h3 class="admontitle">Примечание: </h3><p xmlns="http://www.w3.org/1999/xhtml">Вы можете сэкономить два лишних шага, просто выдав команду
+	  <code class="command">make install clean</code>
+	  вместо <code class="command">make</code>,
+	  <code class="command">make install</code> и
+	  последующей <code class="command">make clean</code>
+	  в трех отдельных шагах.</p></div><div xmlns="" class="note"><h3 class="admontitle">Примечание: </h3><p xmlns="http://www.w3.org/1999/xhtml">Установка порта единственной командой
+	  <code class="command">make install</code> чревата
+	  возможными частыми остановками процесса инсталляции из-за
+	  ожидания вмешательства пользователя: некоторым портам требуется
+	  ввод опций.  Чтобы избежать траты времени, особенно для портов
+	  с многими зависимостями, запустите сначала
+	  <code class="command">make config-recursive</code>
+	  чтобы выполнить конфигурирование всех опций за один заход.
+	  Далее, запустите <code class="command">make
+	    install [clean]</code>.</p></div><div xmlns="" class="tip"><h3 class="admontitle">Подсказка: </h3><p xmlns="http://www.w3.org/1999/xhtml">Когда используется <code class="buildtarget">config-recursive</code>,
+	  перечень подлежащих настройке портов собирается целью
+	  <code class="buildtarget">all-depends-list</code> команды <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=make&amp;sektion=1"><span class="citerefentry"><span class="refentrytitle">make</span>(1)</span></a>.
+	  Часто рекомендуется повторять запуск
+	  <code class="command">make config-recursive</code>
+	  до тех пор, пока не будут определены все опции зависимых портов,
+	  а меню <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=dialog&amp;sektion=1"><span class="citerefentry"><span class="refentrytitle">dialog</span>(1)</span></a> выбора опций портов появляться перестанут.
+	  При этом можно быть уверенным, что все опции были настроены как
+	  и намеревалось.</p></div><div xmlns="" class="note"><h3 class="admontitle">Примечание: </h3><p xmlns="http://www.w3.org/1999/xhtml">Некоторые командные процессоры для ускорения поиска исполняемых
+	  файлов и команд кэшируют имена программ, доступных для
+	  вызова из каталогов, перечисленных в переменной окружения
+	  <code class="envar">PATH</code>.  Если вы используете <code class="command">tcsh</code>,
+	  то вам может потребоваться набрать <code class="command">rehash</code>,
+	  после чего свежеустановленную программу можно будет вызывать
+	  без указания полного пути.  Для командного интерпретатора
+	  <code class="command">sh</code> выполните
+	  <code class="command">hash -r</code>.  Дополнительную информацию можно найти
+	  в документации к вашему командному процессору.</p></div><p>В некоторых имеющихся в продаже комплектах DVD от третьих лиц,
+	таких как the FreeBSD Toolkit от
+	<a class="link" href="http://www.freebsdmall.com/" target="_top">FreeBSD Mall</a>,
+	содержатся дистрибутивные файлы (distfiles).  Их можно использовать
+	с Коллекцией Портов.  Смонтируйте DVD в <code class="filename">/cdrom</code>.
+	Если вы используете иную точку монтирования, укажите её в переменной
+	<a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=make&amp;sektion=1"><span class="citerefentry"><span class="refentrytitle">make</span>(1)</span></a> <code class="varname">CD_MOUNTPTS</code>.  Если необходимые для
+	построения порта дистрибутивные файлы находятся на диске, то они будут
+	задействованы автоматически.</p><div xmlns="" class="note"><h3 class="admontitle">Примечание: </h3><p xmlns="http://www.w3.org/1999/xhtml">Лицензии некоторых портов не позволяют помещать их на DVD.
+	  Причиной тому может служить обязательность заполнения регистрационной
+	  формы перед загрузкой, или запрет на дальнейшее распространение.
+	  Если вы хотите установить порт, которого нет на DVD, вам нужно
+	  иметь подключение к Интернет.</p></div><p>Для загрузки файлов система портов использует утилиту
+	<a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=fetch&amp;sektion=1"><span class="citerefentry"><span class="refentrytitle">fetch</span>(1)</span></a>, которая проверяет значения некоторых переменных
+        окружения, включая <code class="envar">FTP_PASSIVE_MODE</code>,
+        <code class="envar">FTP_PROXY</code> и <code class="envar">FTP_PASSWORD</code>.  Если вы
+        находитесь за сетевым экраном или для работы с FTP/HTTP вам
+        необходимо использовать прокси, то определите соответствующие
+        переменные.  Обратитесь к справочной странице по <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=fetch&amp;sektion=3"><span class="citerefentry"><span class="refentrytitle">fetch</span>(3)</span></a> для
+        получения полного списка переменных.</p><p>Пользователям, которые не могут быть постоянно подключены
+	к сети, поможет команда
+	<code class="command">make fetch</code>.
+	Запустите эту команду в каталоге <code class="filename">/usr/ports</code>,
+	и требуемые файлы будут загружены.  Эта команда также работает и с
+	вложенными категориями, например: <code class="filename">/usr/ports/net</code>.
+	Заметьте, что если порт имеет зависимости от библиотек или других
+	портов, то команда <span class="emphasis"><em>не будет</em></span> загружать
+	дистрибутивные файлы для зависимых портов.  Для загрузки всех
+	зависимых дистрибутивных файлов задействуйте команду <code class="command">make
+	  fetch-recursive</code>.</p><div xmlns="" class="note"><h3 class="admontitle">Примечание: </h3><p xmlns="http://www.w3.org/1999/xhtml">Вы можете построить все порты в категории за раз, запустив
+	  команду <code class="command">make</code> в каталоге верхнего уровня.
+	  Однако это опасно, так как некоторые порты не могут сосуществовать.
+	  В других случаях некоторые порты могут устанавливать два различных
+	  файла с одним и тем же именем.</p></div><p>В некоторых редких случаях пользователям необходимо получить
+	tar-архивы с сайтов, отличающихся от указанных по умолчанию в
+	<code class="varname">MASTER_SITES</code>.  Вы можете переопределить значение
+	<code class="varname">MASTER_SITES</code> посредством следующей команды:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>cd /usr/ports/<em class="replaceable"><code>directory</code></em></code></strong>
+<code class="prompt">#</code> <strong class="userinput"><code>make MASTER_SITE_OVERRIDE= \
+ftp://ftp.FreeBSD.org/pub/FreeBSD/ports/distfiles/ fetch</code></strong></pre><p>В этом примере значение переменной <code class="varname">MASTER_SITES</code>
+	изменено на <code class="systemitem">ftp.FreeBSD.org/pub/FreeBSD/ports/distfiles/</code>.</p><div xmlns="" class="note"><h3 class="admontitle">Примечание: </h3><p xmlns="http://www.w3.org/1999/xhtml">Некоторые порты позволяют указывать опции, которые включают
+	  или выключают построение отдельных частей приложения, изменяют
+	  некоторые параметры безопасности, а также задают прочие настройки.
+	  Примерами таких портов могут служить:
+	  <a xmlns="" class="package" href="http://www.freebsd.org/cgi/url.cgi?ports/www/firefox/pkg-descr">www/firefox</a>,
+	  <a xmlns="" class="package" href="http://www.freebsd.org/cgi/url.cgi?ports/security/gpgme/pkg-descr">security/gpgme</a> и
+	  <a xmlns="" class="package" href="http://www.freebsd.org/cgi/url.cgi?ports/mail/sylpheed-claws/pkg-descr">mail/sylpheed-claws</a>.
+	  Если для порта существуют опции компиляции, то перед началом
+	  построения будет отображено меню.</p></div><div class="sect3"><div xmlns="" class="titlepage"><div><div><h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="idp76293584"></a>5.6.3.1. Переназначение рабочего и целевого каталогов</h4></div></div></div><p>При помощи переменных <code class="varname">WRKDIRPREFIX</code> и
+	  <code class="varname">PREFIX</code> можно переопределить назначаемые по
+	  умолчанию рабочий и целевой каталоги.  Например:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>make WRKDIRPREFIX=/usr/home/example/ports install</code></strong></pre><p>будет компилировать порт в каталоге
+          <code class="filename">/usr/home/example/ports</code>, а установит всё в
+          <code class="filename">/usr/local</code>.</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>make PREFIX=/usr/home/example/local install</code></strong></pre><p>будет компилировать порт в каталоге
+          <code class="filename">/usr/ports</code>, а установит в
+	  <code class="filename">/usr/home/example/local</code>.</p><p>И, конечно же,</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>make WRKDIRPREFIX=../ports PREFIX=../local install</code></strong></pre><p>использует обе возможности.</p><p>Альтернативным способом является задание этих каталогов в
+	  переменных окружения.  Обратитесь к страницам справки по вашему
+	  командному процессору для получения инструкций о том, как установить
+	  переменные окружения.</p></div><div class="sect3"><div xmlns="" class="titlepage"><div><div><h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="idp76314064"></a>5.6.3.2. Повторная настройка опций портов</h4></div></div></div><p>Некоторые порты предоставляют ncurses-меню, содержащее опции
+	  построения.  Будучи однажды успешно определены, опции сохраняются,
+	  и при повторном построении порта меню не вызывается.  Для изменения
+	  сохраненных опций существует несколько способов повторного вызова
+	  меню.  Один из них - зайти в каталог порта и набрать
+	  <code class="command">make config</code>.
+	  Второй способ - запустить команду
+	  <code class="command">make showconfig</code>.
+	  Еще один способ - выполнить команду
+	  <code class="command">make rmconfig</code>,
+	  которая удалит все ранее отмеченные опции и позволит вам начать
+	  конфигурирование сначала.  Эти и другие способы детально описаны
+	  на странице <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=ports&amp;sektion=7"><span class="citerefentry"><span class="refentrytitle">ports</span>(7)</span></a>.</p></div></div><div class="sect2"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ports-removing"></a>5.6.4. Удаление установленных портов</h3></div></div></div><a id="idp76318160" class="indexterm"></a><p>Установленные порты и пакеты удаляются при помощи команды
+	  <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=pkg_delete&amp;sektion=1"><span class="citerefentry"><span class="refentrytitle">pkg_delete</span>(1)</span></a>:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>pkg_delete lsof-4.57</code></strong></pre></div><div class="sect2"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ports-upgrading"></a>5.6.5. Обновление портов</h3></div></div></div><a id="idp76322256" class="indexterm"></a><p>Прежде всего, при помощи <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=pkg_version&amp;sektion=1"><span class="citerefentry"><span class="refentrytitle">pkg_version</span>(1)</span></a> просмотрите,
+	нет ли в Коллекции Портов более новых версий установленных
+	приложений:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>pkg_version -v</code></strong></pre><div class="sect3"><div xmlns="" class="titlepage"><div><div><h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ports-file-updating"></a>5.6.5.1. Прочитайте <code class="filename">/usr/ports/UPDATING</code></h4></div></div></div><p>После обновления Коллекции Портов, и перед тем, как обновить
+	  приложение из порта, сверьтесь с файлом
+	  <code class="filename">/usr/ports/UPDATING</code>.  В нем дана информация
+	  по различным вопросам и дополнительным шагам, которые
+	  могут быть необходимы для обновления порта, включая информацию
+	  о таких вещах как изменения форматов файлов, изменения
+	  в расположении конфигурационных файлов, или другие нестыковки
+	  с предыдущими версиями.</p><p>Если <code class="filename">UPDATING</code> противоречит чему-либо,
+	  написанному в этом документе, то доверьтесь информации из
+	  <code class="filename">UPDATING</code>.</p></div><div class="sect3"><div xmlns="" class="titlepage"><div><div><h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="portupgrade"></a>5.6.5.2. Обновление Портов при помощи Portupgrade</h4></div></div></div><a id="idp76333520" class="indexterm"></a><p>Утилита <span class="application">portupgrade</span> создана для
+	  простого обновления установленных портов.  Она доступна из порта
+	  <a xmlns="" class="package" href="http://www.freebsd.org/cgi/url.cgi?ports/ports-mgmt/portupgrade/pkg-descr">ports-mgmt/portupgrade</a>.
+	  Установите её как и любой иной порт при помощи команды
+	  <code class="command">make install clean</code>:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>cd /usr/ports/ports-mgmt/portupgrade</code></strong>
+<code class="prompt">#</code> <strong class="userinput"><code>make install clean</code></strong></pre><p>Проверьте перечень установленных портов командой
+	  <code class="command">pkgdb -F</code> и устраните все несоответствия, о которых
+	  сообщит утилита.  Хорошей идеей является выполнение этого действия
+	  регулярно, перед каждым обновлением.</p><p>Используйте <code class="command">portupgrade -a</code> для обновления
+	  всех устаревших портов, установленных в вашей системе.  Добавьте
+	  флаг <code class="option">-i</code> если вы желаете получать запрос
+	  на каждый обновляемый порт.</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>portupgrade -ai</code></strong></pre><p>Для обновления конкретного приложения, а не всех
+	  установленных портов, запустите <code class="command">portupgrade
+	    <em class="replaceable"><code>pkgname</code></em></code>.  Включите флаг
+	  <code class="option">-R</code> при необходимости обновить все порты, требуемые
+	  данным приложением.</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>portupgrade -R firefox</code></strong></pre><p>Для использования при установке пакетов, а не портов, укажите
+	  флаг <code class="option">-P</code>.  С этим параметром
+	  <span class="application">portupgrade</span> будет искать пакеты в
+	  локальных каталогах, указанных в переменной окружения
+	  <code class="envar">PKG_PATH</code>, а если не найдет их, то загрузит с
+	  удаленного сайта.  Если пакеты не могут быть найдены локально
+	  или загружены удаленно, <span class="application">portupgrade</span>
+	  использует порты.  Чтобы запретить использование портов,
+	  укажите <code class="option">-PP</code>.</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>portupgrade -PP gnome2</code></strong></pre><p>Для простой загрузки дистрибутивных файлов без построения или
+	  установки чего бы то ни было, задайте флаг <code class="option">-F</code>.
+	  Дополнительную информацию можно получить на странице справки по
+	  утилите <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=portupgrade&amp;sektion=1"><span class="citerefentry"><span class="refentrytitle">portupgrade</span>(1)</span></a>.</p></div><div class="sect3"><div xmlns="" class="titlepage"><div><div><h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="portmaster"></a>5.6.5.3. Обновление портов при помощи
+	  <span class="application">portmaster</span></h4></div></div></div><a id="idp76353104" class="indexterm"></a><p>Утилита <a xmlns="" class="package" href="http://www.freebsd.org/cgi/url.cgi?ports/ports-mgmt/portmaster/pkg-descr">ports-mgmt/portmaster</a> - это еще один
+	  инструмент для обновления установленных портов.  Утилита
+	  <span class="application">portmaster</span> опирается на возможности
+	  <span class="quote"><<<span class="quote">базовой</span>>></span> системы и не зависит от других портов.
+	  Она использует информацию из <code class="filename">/var/db/pkg/</code> для определения портов,
+	  подлежащих обновлению.  Для установки утилиты выполните
+	  следующее:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>cd /usr/ports/ports-mgmt/portmaster</code></strong>
+<code class="prompt">#</code> <strong class="userinput"><code>make install clean</code></strong></pre><p><span class="application">Portmaster</span> делит порты
+	  на четыре категории:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>Корневые порты: не зависят от других портов и нет портов,
+	      зависимых от корневых;</p></li><li class="listitem"><p>Стволовые порты: не зависят от других портов, но есть
+	      порты, зависящие от стволовых;</p></li><li class="listitem"><p>Веточные порты: зависят от других портов и есть порты,
+	      зависящие от веточных;</p></li><li class="listitem"><p>Листьевые порты: зависят от других портов, но нет портов,
+	      зависящих от листьевых.</p></li></ul></div><p>Чтобы проверить наличие обновлений для всех установленных
+	  портов, задайте утилите флаг <code class="option">-L</code>:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>portmaster -L</code></strong>
+===&gt;&gt;&gt; Root ports (No dependencies, not depended on)
+===&gt;&gt;&gt; ispell-3.2.06_18
+===&gt;&gt;&gt; screen-4.0.3
+        ===&gt;&gt;&gt; New version available: screen-4.0.3_1
+===&gt;&gt;&gt; tcpflow-0.21_1
+===&gt;&gt;&gt; 7 root ports
+...
+===&gt;&gt;&gt; Branch ports (Have dependencies, are depended on)
+===&gt;&gt;&gt; apache-2.2.3
+        ===&gt;&gt;&gt; New version available: apache-2.2.8
+...
+===&gt;&gt;&gt; Leaf ports (Have dependencies, not depended on)
+===&gt;&gt;&gt; automake-1.9.6_2
+===&gt;&gt;&gt; bash-3.1.17
+        ===&gt;&gt;&gt; New version available: bash-3.2.33
+...
+===&gt;&gt;&gt; 32 leaf ports
+
+===&gt;&gt;&gt; 137 total installed ports
+        ===&gt;&gt;&gt; 83 have new versions available</pre><p>Все установленные порты могут быть обновлены при помощи одной
+	  команды:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>portmaster -a</code></strong></pre><div xmlns="" class="note"><h3 class="admontitle">Примечание: </h3><p xmlns="http://www.w3.org/1999/xhtml">По умолчанию, <span class="application">portmaster</span> создаст
+	    дублирующий пакет перед удалением установленного порта.  Если
+	    обновление порта прошло успешно,
+	    <span class="application">portmaster</span> удалит дублирующий пакет.
+	    При помощи опции <code class="option">-b</code> можно проинструктировать
+	    <span class="application">portmaster</span> не выполнять автоматическое
+	    удаление дублирующего пакета.  Указание опции <code class="option">-i</code>
+	    запустит <span class="application">portmaster</span> в интерактивном
+	    режиме, запрашивающим подтверждение пользователя перед
+	    обновлением каждого порта.</p></div><p>Если во время процесса обновления возникнут ошибки,
+	  задействуйте опцию <code class="option">-f</code> для обновления/перестройки
+	  всех портов:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>portmaster -af</code></strong></pre><p>Также, <span class="application">portmaster</span> может быть
+	  задействован для установки новых портов в систему, автоматически
+	  обновляя другие зависимые порты перед построением и установкой
+	  нового порта:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>portmaster <em class="replaceable"><code>shells/bash</code></em></code></strong></pre><p>За подробной информацией обратитесь к <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=portmaster&amp;sektion=8"><span class="citerefentry"><span class="refentrytitle">portmaster</span>(8)</span></a>.</p></div></div><div class="sect2"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="ports-disk-space"></a>5.6.6. Порты и дисковое пространство</h3></div></div></div><a id="idp76378064" class="indexterm"></a><p>Работа с Коллекцией Портов со временем приводит к увеличению
+	занимаемого дискового пространства.  После построения и установки
+	программы из порта удалите временный каталог <code class="filename">work</code> при помощи команды
+	<code class="command">make clean</code>.  Для
+	очистки всей Коллекции Портов наберите:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>portsclean -C</code></strong></pre><p>По прошествии некоторого времени у вас соберется множество
+	дистрибутивных файлов в каталоге <code class="filename">distfiles</code>.  Следующая команда удалит все
+	дистрибутивные файлы, которые более не связаны ни с какими
+	портами:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>portsclean -D</code></strong></pre><p>Для удаления всех дистрибутивных файлов, не связанных ни с
+	одним установленным в вашу систему портом, наберите:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>portsclean -DD</code></strong></pre><div xmlns="" class="note"><h3 class="admontitle">Примечание: </h3><p xmlns="http://www.w3.org/1999/xhtml">Утилита <code class="command">portsclean</code> является частью порта
+	  <a xmlns="" class="package" href="http://www.freebsd.org/cgi/url.cgi?ports/ports-mgmt/portupgrade/pkg-descr">ports-mgmt/portupgrade</a>.</p></div><p>Удобная утилита для автоматизации удаления портов, в которых вы
+	более не нуждаетесь, доступна из порта
+	<a xmlns="" class="package" href="http://www.freebsd.org/cgi/url.cgi?ports/ports-mgmt/pkg_cutleaves/pkg-descr">ports-mgmt/pkg_cutleaves</a>.</p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="pkgng-intro.html">Пред.</a> </td><td width="20%" align="center"><a accesskey="u" href="ports.html">Наверх</a></td><td width="40%" align="right"> <a accesskey="n" href="ports-nextsteps.html">След.</a></td></tr><tr><td width="40%" align="left" valign="top">5.5. Использование <span class="application">pkgng</span> для управления
+      бинарными пакетами </td><td width="20%" align="center"><a accesskey="h" href="index.html">Начало</a></td><td width="40%" align="right" valign="top"> 5.7. Действия после установки</td></tr></table></div><p align="center"><small>Этот, и другие документы, могут быть скачаны с
+    <a href="http://ftp.FreeBSD.org/pub/FreeBSD/doc/">http://ftp.FreeBSD.org/pub/FreeBSD/doc/</a>.</small></p><p align="center"><small>По вопросам, связанным с FreeBSD, прочитайте
+    <a href="http://www.FreeBSD.org/ru/docs.html">документацию</a> прежде чем писать в
+    &lt;<a href="mailto:questions@FreeBSD.org">questions@FreeBSD.org</a>&gt;.<br></br>
+    По вопросам, связанным с этой документацией, пишите в рассылку
+    &lt;<a href="mailto:doc@FreeBSD.org">doc@FreeBSD.org</a>&gt;.<br></br></small></p></body></html>

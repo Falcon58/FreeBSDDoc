@@ -1,0 +1,103 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>9.5. Сборка и установка собственного ядра</title><link rel="stylesheet" type="text/css" href="docbook.css" /><link rev="made" href="mailto:doc@FreeBSD.org" /><meta name="generator" content="DocBook XSL Stylesheets V1.78.1" /><link rel="home" href="index.html" title="Руководство FreeBSD" /><link rel="up" href="kernelconfig.html" title="Глава 9. Настройка ядра FreeBSD" /><link rel="prev" href="kernelconfig-modules.html" title="9.4. Драйвера, подсистемы и модули ядра" /><link rel="next" href="kernelconfig-config.html" title="9.6. Конфигурационный файл" /><link rel="copyright" href="legalnotice.html" title="Юридическое уведомление" /><script xmlns="" type="text/javascript" src="/layout/js/google.js"></script></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">9.5. Сборка и установка собственного ядра</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="kernelconfig-modules.html">Пред.</a> </td><th width="60%" align="center">Глава 9. Настройка ядра FreeBSD</th><td width="20%" align="right"> <a accesskey="n" href="kernelconfig-config.html">След.</a></td></tr></table><hr /></div><div class="sect1"><div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both"><a id="kernelconfig-building"></a>9.5. Сборка и установка собственного ядра</h2></div></div></div><a id="idp78445008" class="indexterm"></a><div xmlns="" class="note"><h3 class="admontitle">Примечание: </h3><p xmlns="http://www.w3.org/1999/xhtml">Для сборки ядра необходимо наличие всех исходных файлов
+    FreeBSD.</p></div><p>Во-первых, давайте сделаем краткий обзор каталога, в котором будет
+    происходить сборка ядра.  Все каталоги, которые будут упоминаться, будут
+    относительными по отношению к основному каталогу
+    <code class="filename">/usr/src/sys</code>, который также доступен как каталог
+    <code class="filename">/sys</code>.  Этот каталог содержит множество подкаталогов,
+    представляющих собой различные части ядра, но наиболее важным для нас
+    будет каталог <code class="filename"><em class="replaceable"><code>arch</code></em>/conf</code>,
+    в котором вы будете редактировать конфигурационный файл ядра и в котором
+    находится каталог <code class="filename">compile</code>, где будет
+    собираться ваше ядро.  <em class="replaceable"><code>arch</code></em> может быть
+    <code class="filename">i386</code>,
+    <code class="filename">amd64</code>, <code class="filename">ia64</code>,
+    <code class="filename">powerpc</code>, <code class="filename">sparc64</code> или
+    <code class="filename">pc98</code> (альтернативная ветвь аппаратного обеспечения,
+    популярная в Японии).  Все, что находится внутри каталога определенной
+    архитектуры, относится только к этой архитектуре; остальной код является
+    машинно независимым и общим для всех платформ, на которые FreeBSD может
+    быть потенциально
+    портирована.  Обратите внимание на логическую структуру каталогов, в
+    которой каждое поддерживаемое устройство, каждая файловая система и
+    каждая опция размещается в своём собственном каталоге.</p><p>В примерах этой главы подразумевается, что вы используете
+    архитектуру i386.  Если архитектура вашей системы отличается от
+    используемой в примерах, то вам необходимо будет соответственно
+    изменить имена каталогов.</p><div xmlns="" class="note"><h3 class="admontitle">Примечание: </h3><p xmlns="http://www.w3.org/1999/xhtml">Если каталог <code class="filename">/usr/src/</code> отсутствует в вашей
+    системе (или этот каталог пуст), то это значит, что исходные тексты
+    не были установлены.  Наиболее простой способ установить их
+    - воспользоваться <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=csup&amp;sektion=1"><span class="citerefentry"><span class="refentrytitle">csup</span>(1)</span></a>, как описано в
+    <a class="xref" href="synching.html" title="21.5. Синхронизация ваших исходных текстов">Раздел 21.5, Синхронизация ваших исходных текстов</a>.  Далее, создайте символическую ссылку на
+    <code class="filename">/usr/src/sys/</code>:</p><pre xmlns="http://www.w3.org/1999/xhtml" class="screen"><code class="prompt">#</code> <strong class="userinput"><code>ln -s /usr/src/sys /sys</code></strong></pre></div><p>Затем, перейдите в каталог
+    <code class="filename"><em class="replaceable"><code>arch</code></em>/conf</code>
+    и скопируйте файл конфигурации <code class="filename">GENERIC</code>
+    в файл с выбранным вами именем. Например:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>cd /usr/src/sys/<em class="replaceable"><code>i386</code></em>/conf</code></strong>
+<code class="prompt">#</code> <strong class="userinput"><code>cp GENERIC <em class="replaceable"><code>MYKERNEL</code></em></code></strong></pre><p>По традиции имя состоит из букв в верхнем регистре, и если
+    вы поддерживаете несколько компьютеров FreeBSD на различном оборудовании,
+    хорошая идея добавлять это имя к имени хоста.  Мы назвали ядро
+    <code class="filename"><em class="replaceable"><code>MYKERNEL</code></em></code> в этом примере.</p><div xmlns="" class="tip"><h3 class="admontitle">Подсказка: </h3><p xmlns="http://www.w3.org/1999/xhtml">Помещение файла конфигурации ядра в <code class="filename">/usr/src</code>
+    может быть плохой идеей.  Если вы испытываете проблемы,
+    их можно решить удалив <code class="filename">/usr/src</code> и начав
+    все с начала.  После этого обычно требуется несколько секунд, чтобы
+    понять, что вы удалили собственный файл настройки ядра.  Не
+    редактируйте непосредственно <code class="filename">GENERIC</code>, он может
+    быть также перезаписан и при следующем <a class="link" href="updating-upgrading.html" title="Глава 21. Обновление системы и смена версии">обновлении дерева исходных текстов</a>,
+    и изменения ядра будут потеряны.</p><p xmlns="http://www.w3.org/1999/xhtml">Вы можете сохранить файл конфигурации ядра в другом месте,
+    а затем создать символическую ссылку на этот файл в каталоге
+    <code class="filename"><em class="replaceable"><code>i386</code></em></code>.</p><p xmlns="http://www.w3.org/1999/xhtml">Например:</p><pre xmlns="http://www.w3.org/1999/xhtml" class="screen"><code class="prompt">#</code> <strong class="userinput"><code>cd /usr/src/sys/<em class="replaceable"><code>i386</code></em>/conf</code></strong>
+<code class="prompt">#</code> <strong class="userinput"><code>mkdir /root/kernels</code></strong>
+<code class="prompt">#</code> <strong class="userinput"><code>cp GENERIC /root/kernels/<em class="replaceable"><code>MYKERNEL</code></em></code></strong>
+<code class="prompt">#</code> <strong class="userinput"><code>ln -s /root/kernels/<em class="replaceable"><code>MYKERNEL</code></em></code></strong></pre></div><p>Теперь отредактируйте файл <code class="filename"><em class="replaceable"><code>MYKERNEL</code></em></code> в своём
+    любимом текстовом редакторе.  Если вы только начинаете, единственным
+    доступным редактором скорее всего будет <span class="application">vi</span>,
+    который слишком сложен для того, чтобы описать его здесь,
+    но в <a class="link" href="bibliography.html" title="Приложение B. Библиография">библиографии</a> перечислено
+    множество книг, в которых его использование хорошо освещено.  Однако FreeBSD
+    предоставляет более простой редактор <span class="application">ee</span>,
+    который, если вы - новичок, подойдёт вам больше всего.  Не стесняйтесь
+    изменять строки комментариев в начале файла, с тем, чтобы отобразить вашу
+    конфигурацию или изменения, которые вы сделали по сравнению с
+    <code class="filename">GENERIC</code>.</p><a id="idp78487760" class="indexterm"></a><p>Если вам приходилось собирать ядро для <span class="trademark">SunOS</span>TM или какой-либо другой
+    операционной системы типа BSD, многое из того, что содержится в этом
+    файле будет очень знакомо вам.  Если же вы, напротив, использовали другую
+    операционную систему, такую как DOS, файл конфигурации
+    <code class="filename">GENERIC</code> может показаться вам крайне сложным, поэтому
+    следуйте инструкциям в разделе <a class="link" href="kernelconfig-config.html" title="9.6. Конфигурационный файл">Конфигурационный файл</a> медленно и
+    внимательно.</p><div xmlns="" class="note"><h3 class="admontitle">Примечание: </h3><p xmlns="http://www.w3.org/1999/xhtml">Если вы <a class="link" href="updating-upgrading.html" title="Глава 21. Обновление системы и смена версии">синхронизируете дерево исходных текстов</a>
+    с деревом проекта FreeBSD, не забудьте свериться с файлом
+    <code class="filename">/usr/src/UPDATING</code> перед обновлением. В этом
+    файле описаны все важные вопросы и области исходного кода, требующие
+    особого внимания.
+    <code class="filename">/usr/src/UPDATING</code> всегда соответствует версии
+    ваших исходных текстов FreeBSD, поэтому является более актуальным
+    источником информации, чем это руководство.</p></div><p>Теперь вы должны скомпилировать ядро.</p><div class="procedure"><a id="idp78492496"></a><div class="procedure-title">Процедура 9.1. Сборка ядра</div><div xmlns="" class="note"><h3 class="admontitle">Примечание: </h3><p xmlns="http://www.w3.org/1999/xhtml">Для сборки ядра необходимо наличие всех исходных файлов
+    FreeBSD.</p></div><ol class="procedure" type="1"><li class="step"><p>Перейдите в каталог <code class="filename">/usr/src</code>:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>cd /usr/src</code></strong></pre></li><li class="step"><p>Соберите ядро:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>make buildkernel KERNCONF=<em class="replaceable"><code>MYKERNEL</code></em></code></strong></pre></li><li class="step"><p>Установите новое ядро:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>make installkernel KERNCONF=<em class="replaceable"><code>MYKERNEL</code></em></code></strong></pre></li></ol></div><div xmlns="" class="tip"><h3 class="admontitle">Подсказка: </h3><p xmlns="http://www.w3.org/1999/xhtml">По умолчанию, при построении ядра, <span class="emphasis"><em>все</em></span>
+    модули ядра так же будут пересобраны.  Если вы хотите обновить
+    ядро быстрее или построить только определённые модули, то вам
+    нужно отредактировать файл <code class="filename">/etc/make.conf</code>
+    перед началом процесса сборки ядра:</p><pre xmlns="http://www.w3.org/1999/xhtml" class="programlisting">MODULES_OVERRIDE = linux acpi sound/sound sound/driver/ds1 ntfs</pre><p xmlns="http://www.w3.org/1999/xhtml">Эта переменная устанавливает список модулей, которые нужно построить
+    вместо построения всех модулей.</p><pre xmlns="http://www.w3.org/1999/xhtml" class="programlisting">WITHOUT_MODULES = linux acpi sound ntfs</pre><p xmlns="http://www.w3.org/1999/xhtml">В этой переменной перечисляются основные модули, которые
+    необходимо исключить из процесса сборки.
+    За другими переменными, которые вы можете
+    посчитать полезными в процессе сборки ядра, обращайтесь к странице
+    справочника <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=make.conf&amp;sektion=5"><span class="citerefentry"><span class="refentrytitle">make.conf</span>(5)</span></a>.</p></div><a id="idp78508112" class="indexterm"></a><p>Новое ядро будет скопировано в каталог <code class="filename">/boot/kernel</code> как
+    <code class="filename">/boot/kernel/kernel</code>, а старое ядро будет перемещено в
+    <code class="filename">/boot/kernel.old/kernel</code>.
+    Теперь перезагрузите систему для того,
+    чтобы использовать новое ядро.  Если что-то пойдёт не так, вы
+    можете обратиться к разделу <a class="link" href="kernelconfig-trouble.html" title="9.7. Решение проблем">Решение проблем</a> в конце
+    этой главы, который может оказаться
+    полезен.  Не забудьте прочитать
+    раздел, который объясняет как исправить ситуацию, когда ядро <a class="link" href="kernelconfig-trouble.html#kernelconfig-noboot">не загружается</a>.</p><div xmlns="" class="note"><h3 class="admontitle">Примечание: </h3><p xmlns="http://www.w3.org/1999/xhtml">Другие файлы, относящиеся к
+    процессу загрузки, такие как загрузчик (<a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=loader&amp;sektion=8"><span class="citerefentry"><span class="refentrytitle">loader</span>(8)</span></a>) и его
+    конфигурационные файлы, размещаются в <code class="filename">/boot</code>.
+    Модули сторонних производителей могут быть помещены в
+    <code class="filename">/boot/kernel</code>, хотя пользователи
+    должны знать, что
+    очень важно, чтобы модули были синхронизированы с собранным ядром.
+    Модули, не рассчитанные на работу с собранным ядром, могут вызвать
+    нестабильность и некорректность работы.</p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="kernelconfig-modules.html">Пред.</a> </td><td width="20%" align="center"><a accesskey="u" href="kernelconfig.html">Наверх</a></td><td width="40%" align="right"> <a accesskey="n" href="kernelconfig-config.html">След.</a></td></tr><tr><td width="40%" align="left" valign="top">9.4. Драйвера, подсистемы и модули ядра </td><td width="20%" align="center"><a accesskey="h" href="index.html">Начало</a></td><td width="40%" align="right" valign="top"> 9.6. Конфигурационный файл</td></tr></table></div><p align="center"><small>Этот, и другие документы, могут быть скачаны с
+    <a href="http://ftp.FreeBSD.org/pub/FreeBSD/doc/">http://ftp.FreeBSD.org/pub/FreeBSD/doc/</a>.</small></p><p align="center"><small>По вопросам, связанным с FreeBSD, прочитайте
+    <a href="http://www.FreeBSD.org/ru/docs.html">документацию</a> прежде чем писать в
+    &lt;<a href="mailto:questions@FreeBSD.org">questions@FreeBSD.org</a>&gt;.<br><br>
+    По вопросам, связанным с этой документацией, пишите в рассылку
+    &lt;<a href="mailto:doc@FreeBSD.org">doc@FreeBSD.org</a>&gt;.<br><br></small></p></body></html>

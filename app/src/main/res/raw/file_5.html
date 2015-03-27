@@ -1,0 +1,186 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=koi8-r" /><title>12.8. Настройка карт сетевых интерфейсов</title><link rel="stylesheet" type="text/css" href="docbook.css" /><link rev="made" href="mailto:doc@FreeBSD.org" /><meta name="generator" content="DocBook XSL Stylesheets V1.78.1" /><link rel="home" href="index.html" title="Руководство FreeBSD" /><link rel="up" href="config-tuning.html" title="Глава 12. Настройка и оптимизация" /><link rel="prev" href="configtuning-rcd.html" title="12.7. Использование rc во FreeBSD 5.X и последующих версиях" /><link rel="next" href="configtuning-virtual-hosts.html" title="12.9. Настройка виртуальных серверов" /><link rel="copyright" href="legalnotice.html" title="Юридическое уведомление" /><script xmlns="" type="text/javascript" src="/layout/js/google.js"></script></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">12.8. Настройка карт сетевых интерфейсов</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="configtuning-rcd.html">Пред.</a> </td><th width="60%" align="center">Глава 12. Настройка и оптимизация</th><td width="20%" align="right"> <a accesskey="n" href="configtuning-virtual-hosts.html">След.</a></td></tr></table><hr /></div><div class="sect1"><div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both"><a id="config-network-setup"></a>12.8. Настройка карт сетевых интерфейсов</h2></div><div><span class="authorgroup">Предоставил <span xmlns="http://www.w3.org/1999/xhtml" class="author"><span class="firstname">Marc</span> <span class="surname">Fonvieille</span></span>. </span></div></div></div><a id="idp82417872" class="indexterm"></a><p>В наши дни мы не представляем себе компьютера без сетевого
+    подключения.  Добавление и настройка сетевой карты это
+    обычная задача любого администратора FreeBSD.</p><div class="sect2"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="idp82419408"></a>12.8.1. Поиск подходящего драйвера</h3></div></div></div><a id="idp82420048" class="indexterm"></a><p>В первую очередь определите тип используемой карты (PCI или ISA),
+    модель карты и используемый в ней чип.  FreeBSD поддерживает
+    многие PCI и ISA карты.  Обратитесь к Списку поддерживаемого
+    оборудования вашего релиза чтобы узнать, поддерживается ли
+    карта.</p><p>Как только вы убедились, что карта поддерживается, потребуется
+    определить подходящий драйвер.  В файлах
+    <code class="filename">/usr/src/sys/conf/NOTES</code> и
+    <code class="filename">/usr/src/sys/<em class="replaceable"><code>arch</code></em>/conf/NOTES</code>
+    находится список
+    драйверов сетевых интерфейсов с информацией о поддерживаемых
+    чипсетах/картах.  Если вы сомневаетесь в том, какой драйвер
+    подойдет, прочтите страницу справочника к драйверу.
+    Страница справочника содержит больше информации о поддерживаемом
+    оборудовании и даже о проблемах, которые могут возникнуть.</p><p>Если ваша карта широко распространена, вам скорее всего
+    не потребуется долго искать драйвер.  Драйверы для
+    широко распространенных карт представлены в ядре
+    <code class="filename">GENERIC</code>, так что ваша карта должна определиться
+    при загрузке, примерно так:</p><pre class="screen">dc0: &lt;82c169 PNIC 10/100BaseTX&gt; port 0xa000-0xa0ff mem 0xd3800000-0xd38
+000ff irq 15 at device 11.0 on pci0
+dc0: Ethernet address: 00:a0:cc:da:da:da
+miibus0: &lt;MII bus&gt; on dc0
+ukphy0: &lt;Generic IEEE 802.3u media interface&gt; on miibus0
+ukphy0:  10baseT, 10baseT-FDX, 100baseTX, 100baseTX-FDX, auto
+dc1: &lt;82c169 PNIC 10/100BaseTX&gt; port 0x9800-0x98ff mem 0xd3000000-0xd30
+000ff irq 11 at device 12.0 on pci0
+dc1: Ethernet address: 00:a0:cc:da:da:db
+miibus1: &lt;MII bus&gt; on dc1
+ukphy1: &lt;Generic IEEE 802.3u media interface&gt; on miibus1
+ukphy1:  10baseT, 10baseT-FDX, 100baseTX, 100baseTX-FDX, auto</pre><p>В этом примере две карты используют имеющийся в системе
+    драйвер <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=dc&amp;sektion=4"><span class="citerefentry"><span class="refentrytitle">dc</span>(4)</span></a>.</p><p>Если драйвер вашей сетевой карты отсутствует в
+    <code class="filename">GENERIC</code>, для ее использования потребуется
+    загрузить подходящий драйвер.  Это может быть сделано одним
+    из двух способов:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>Простейший способ - просто загрузить модуль
+    ядра сетевой карты с помощью <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=kldload&amp;sektion=8"><span class="citerefentry"><span class="refentrytitle">kldload</span>(8)</span></a>.  Не все
+    драйверы доступны в виде модулей; например, модули
+    отсутствуют для ISA карт.</p></li><li class="listitem"><p>Вместо этого, вы можете статически включить поддержку карты,
+    скомпилировав собственное ядро.  Информацию о том, какие
+    параметры нужно включать в ядро, можно получить из
+    <code class="filename">/usr/src/sys/conf/NOTES</code>,
+    <code class="filename">/usr/src/sys/<em class="replaceable"><code>arch</code></em>/conf/NOTES</code>
+    и страницы справочника драйвера сетевой карты.
+    За более подробной информацией о сборке собственного ядра
+    обращайтесь к <a class="xref" href="kernelconfig.html" title="Глава 9. Настройка ядра FreeBSD">Глава 9, <em>Настройка ядра FreeBSD</em></a>.  Если карта
+    была обнаружена вашим ядром (<code class="filename">GENERIC</code>)
+    во время загрузки, собирать ядро не потребуется.</p></li></ul></div></div><div class="sect2"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="idp82435280"></a>12.8.2. Настройка сетевой карты</h3></div></div></div><a id="idp82435920" class="indexterm"></a><p>Как только для сетевой карты загружен подходящий драйвер,
+    ее потребуется настроить.  Как и многое другое, сетевая
+    карта может быть настроена во время установки с помощью
+    <span class="application">sysinstall</span>.</p><p>Для вывода информации о настройке сетевых интерфейсов системы,
+    введите следующую команду:</p><pre class="screen"><code class="prompt">%</code> <strong class="userinput"><code>ifconfig</code></strong>
+dc0: flags=8843&lt;UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST&gt; mtu 1500
+        inet 192.168.1.3 netmask 0xffffff00 broadcast 192.168.1.255
+        ether 00:a0:cc:da:da:da
+        media: Ethernet autoselect (100baseTX &lt;full-duplex&gt;)
+        status: active
+dc1: flags=8843&lt;UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST&gt; mtu 1500
+        inet 10.0.0.1 netmask 0xffffff00 broadcast 10.0.0.255
+        ether 00:a0:cc:da:da:db
+        media: Ethernet 10baseT/UTP
+        status: no carrier
+lp0: flags=8810&lt;POINTOPOINT,SIMPLEX,MULTICAST&gt; mtu 1500
+lo0: flags=8049&lt;UP,LOOPBACK,RUNNING,MULTICAST&gt; mtu 16384
+        inet 127.0.0.1 netmask 0xff000000
+tun0: flags=8010&lt;POINTOPOINT,MULTICAST&gt; mtu 1500</pre><div xmlns="" class="note"><h3 class="admontitle">Примечание: </h3><p xmlns="http://www.w3.org/1999/xhtml">Старые версии FreeBSD могут потребовать запуска
+    <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=ifconfig&amp;sektion=8"><span class="citerefentry"><span class="refentrytitle">ifconfig</span>(8)</span></a> с параметром <code class="option">-a</code>, за
+    более подробным описанием синтаксиса <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=ifconfig&amp;sektion=8"><span class="citerefentry"><span class="refentrytitle">ifconfig</span>(8)</span></a>
+    обращайтесь к странице справочника.  Учтите также, что
+    строки, относящиеся к IPv6 (<code class="literal">inet6</code> и т.п.)
+    убраны из этого примера.</p></div><p>В этом примере были показаны следующие устройства:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p><code class="filename">dc0</code>: первый Ethernet
+    интерфейс</p></li><li class="listitem"><p><code class="filename">dc1</code>:  второй Ethernet
+    интерфейс</p></li><li class="listitem"><p><code class="filename">lp0</code>: интерфейс параллельного
+    порта</p></li><li class="listitem"><p><code class="filename">lo0</code>: устройство loopback</p></li><li class="listitem"><p><code class="filename">tun0</code>: туннельное устройство,
+    используемое <span class="application">ppp</span></p></li></ul></div><p>Для присвоения имени сетевой карте FreeBSD использует имя
+    драйвера и порядковый номер, в котором карта обнаруживается
+    при инициализации устройств.  Например, <code class="filename">sis2</code>
+    это третья сетевая карта, использующая драйвер <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=sis&amp;sektion=4"><span class="citerefentry"><span class="refentrytitle">sis</span>(4)</span></a>.</p><p>В этом примере, устройство <code class="filename">dc0</code> включено
+    и работает.  Ключевые признаки таковы:</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p><code class="literal">UP</code> означает, что карта настроена и
+    готова.</p></li><li class="listitem"><p>У карты есть интернет (<code class="literal">inet</code>)
+    адрес (в данном случае
+    <code class="systemitem">192.168.1.3</code>).</p></li><li class="listitem"><p>Установлена маска подсети (<code class="literal">netmask</code>;
+    <code class="systemitem">0xffffff00</code>, то же, что и
+    <code class="systemitem">255.255.255.0</code>).</p></li><li class="listitem"><p>Широковещательный адрес (в данном случае,
+    <code class="systemitem">192.168.1.255</code>).</p></li><li class="listitem"><p>Значение MAC адреса карты (<code class="literal">ether</code>)
+    <code class="systemitem">00:a0:cc:da:da:da</code></p></li><li class="listitem"><p>Выбор физической среды передачи данных в режиме автовыбора
+    (<code class="literal">media: Ethernet autoselect (100baseTX
+        &lt;full-duplex&gt;)</code>).  Мы видим, что
+    <code class="filename">dc1</code> была настроена для работы с
+    <code class="literal">10baseT/UTP</code>.  За более подробной
+    информацией о доступных драйверу типах среды обращайтесь
+    к странице справочника.</p></li><li class="listitem"><p>Статус соединения (<code class="literal">status</code>)
+    <code class="literal">active</code>, т.е. несущая обнаружена.
+    Для <code class="filename">dc1</code>, мы видим
+    <code class="literal">status: no carrier</code>.  Это нормально, когда
+    Ethernet кабель не подключен к карте.</p></li></ol></div><p>Если <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=ifconfig&amp;sektion=8"><span class="citerefentry"><span class="refentrytitle">ifconfig</span>(8)</span></a> показывает примерно следующее:</p><pre class="screen">dc0: flags=8843&lt;BROADCAST,SIMPLEX,MULTICAST&gt; mtu 1500
+	        ether 00:a0:cc:da:da:da</pre><p>это означает, что карта не была настроена.</p><p>Для настройки карты вам потребуются привилегии пользователя
+    <code class="systemitem">root</code>.  Настройка сетевой карты может быть
+    выполнена из командной строки с помощью <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=ifconfig&amp;sektion=8"><span class="citerefentry"><span class="refentrytitle">ifconfig</span>(8)</span></a>, но
+    вам потребуется делать это после каждой перезагрузки системы.
+    Подходящее место для настройки сетевых карт это файл
+    <code class="filename">/etc/rc.conf</code>.</p><p>Откройте <code class="filename">/etc/rc.conf</code> в текстовом
+    редакторе.  Вам потребуется добавить строку для каждой сетевой
+    карты, имеющейся в системе, например, в нашем случае, было
+    добавлено две строки:</p><pre class="programlisting">ifconfig_dc0="inet 192.168.1.3 netmask 255.255.255.0"
+ifconfig_dc1="inet 10.0.0.1 netmask 255.255.255.0 media 10baseT/UTP"</pre><p>Замените <code class="filename">dc0</code>,
+    <code class="filename">dc1</code>, и так далее на соответствующие
+    имена ваших карт, подставьте соответствующие адреса.
+    Обратитесь к страницам справочника сетевой карты и
+    <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=ifconfig&amp;sektion=8"><span class="citerefentry"><span class="refentrytitle">ifconfig</span>(8)</span></a>, за подробной информацией о доступных
+    опциях и к странице справочника <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=rc.conf&amp;sektion=5"><span class="citerefentry"><span class="refentrytitle">rc.conf</span>(5)</span></a> за дополнительной
+    информацией о синтаксисе <code class="filename">/etc/rc.conf</code>.</p><p>Если вы настроили сетевую карту в процессе установки системы,
+    некоторые строки, касающиеся сетевой карты, могут уже присутствовать.
+    Внимательно проверьте <code class="filename">/etc/rc.conf</code> перед
+    добавлением каких-либо строк.</p><p>Отредактируйте также файл <code class="filename">/etc/hosts</code>
+    для добавления имен и IP адресов различных компьютеров сети,
+    если их еще там нет.  За дополнительной информацией обращайтесь
+    к man.hosts.5;
+    и к <code class="filename">/usr/share/examples/etc/hosts</code>.</p></div><div class="sect2"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="idp82503760"></a>12.8.3. Тестирование и решение проблем</h3></div></div></div><p>Как только вы внесете необходимые изменения в
+    <code class="filename">/etc/rc.conf</code>, перегрузите компьютер.
+    Изменения настроек интерфейсов будут применены, кроме того
+    будет проверена	правильность настроек.</p><p>Как только система перезагрузится, проверьте сетевые
+    интерфейсы.</p><div class="sect3"><div xmlns="" class="titlepage"><div><div><h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="idp82505680"></a>12.8.3.1. Проверка Ethernet карты</h4></div></div></div><a id="idp82506448" class="indexterm"></a><p>Для проверки правильности настройки сетевой карты,
+    попробуйте выполнить ping для самого интерфейса, а затем
+    для другой машины в локальной сети.</p><p>Сначала проверьте локальный интерфейс:</p><pre class="screen"><code class="prompt">%</code> <strong class="userinput"><code>ping -c5 192.168.1.3</code></strong>
+PING 192.168.1.3 (192.168.1.3): 56 data bytes
+64 bytes from 192.168.1.3: icmp_seq=0 ttl=64 time=0.082 ms
+64 bytes from 192.168.1.3: icmp_seq=1 ttl=64 time=0.074 ms
+64 bytes from 192.168.1.3: icmp_seq=2 ttl=64 time=0.076 ms
+64 bytes from 192.168.1.3: icmp_seq=3 ttl=64 time=0.108 ms
+64 bytes from 192.168.1.3: icmp_seq=4 ttl=64 time=0.076 ms
+
+--- 192.168.1.3 ping statistics ---
+5 packets transmitted, 5 packets received, 0% packet loss
+round-trip min/avg/max/stddev = 0.074/0.083/0.108/0.013 ms</pre><p>Затем проверьте другую машину в локальной сети:</p><pre class="screen"><code class="prompt">%</code> <strong class="userinput"><code>ping -c5 192.168.1.2</code></strong>
+PING 192.168.1.2 (192.168.1.2): 56 data bytes
+64 bytes from 192.168.1.2: icmp_seq=0 ttl=64 time=0.726 ms
+64 bytes from 192.168.1.2: icmp_seq=1 ttl=64 time=0.766 ms
+64 bytes from 192.168.1.2: icmp_seq=2 ttl=64 time=0.700 ms
+64 bytes from 192.168.1.2: icmp_seq=3 ttl=64 time=0.747 ms
+64 bytes from 192.168.1.2: icmp_seq=4 ttl=64 time=0.704 ms
+
+--- 192.168.1.2 ping statistics ---
+5 packets transmitted, 5 packets received, 0% packet loss
+round-trip min/avg/max/stddev = 0.700/0.729/0.766/0.025 ms</pre><p>Вы можете также использовать имя машины вместо
+    <code class="systemitem">192.168.1.2</code>, если настроен файл
+    <code class="filename">/etc/hosts</code>.</p></div><div class="sect3"><div xmlns="" class="titlepage"><div><div><h4 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="idp82512208"></a>12.8.3.2. Решение проблем</h4></div></div></div><a id="idp82512848" class="indexterm"></a><p>Решение проблем с аппаратным и программным обеспечением всегда
+    вызывает сложности, которые можно уменьшить, проверив сначала
+    самые простые варианты.  Подключен ли сетевой кабель? Правильно ли
+    настроены сетевые сервисы?  Правильно ли настроен брандмауэр?
+    Поддерживается ли используемая карта в FreeBSD?  Всегда проверяйте
+    информацию об оборудовании перед отправкой сообщения об ошибке.
+    Обновите FreeBSD до последней версии STABLE.  Просмотрите
+    архивы списков рассылки, или поищите информацию в интернет.</p><p>Если карта работает, но производительность низка, может помочь
+    чтение страницы справочника <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=tuning&amp;sektion=7"><span class="citerefentry"><span class="refentrytitle">tuning</span>(7)</span></a>.  Проверьте также
+    настройки сети, поскольку неправильные настройки могут стать причиной
+    низкой скорости соединения.</p><p>Некоторые пользователи встречаются с несколькими
+    <span class="errorname">device timeouts</span>, что нормально для некоторых
+    сетевых карт.  Если это продолжается и надоедает, убедитесь, что
+    устройство не конфликтует с другим устройством.  Внимательно
+    проверьте подключение кабеля.  Возможно также, что вам просто надо
+    установить другую карту.</p><p>Время от времени, пользователи видят несколько ошибок
+    <span class="errorname">watchdog timeout</span>.  Первое, что требуется сделать,
+    это проверить сетевой кабель.  Многие карты требуют поддержки
+    Bus Mastering слотом PCI.  На некоторых старых материнских платах,
+    только один PCI слот имеет такую поддержку (обычно слот 0).
+    Сверьтесь с документацией на сетевую карту и материнскую плату,
+    чтобы определить, может ли это быть проблемой.</p><p>Сообщение <span class="errorname">No route to host</span> появляются, если
+    система не в состоянии доставить пакеты к хосту назначения.
+    Это может случиться, если не определен маршрут по умолчанию,
+    или кабель не подключен.  Проверьте вывод команды <code class="command">netstat
+        -rn</code> и убедитесь, что к соответствующему хосту
+    есть работающий маршрут.  Если это не так, прочтите <a class="xref" href="advanced-networking.html" title="Глава 27. Сложные вопросы работы в сети">Глава 27, <em>Сложные вопросы работы в сети</em></a>.</p><p>Сообщения <span class="errorname">ping: sendto: Permission denied</span>
+    зачастую появляются при неправильно настроенном брандмауэре.
+    Если <code class="command">ipfw</code> включен в ядре, но правила не
+    определены, правило по умолчанию блокирует весь трафик,
+    даже запросы ping!  Прочтите <a class="xref" href="firewalls.html" title="Глава 26. Межсетевые экраны">Глава 26, <em>Межсетевые экраны</em></a> с более подробной информацией.</p><p>Иногда скорость карты недостаточна, или ниже среднего.  В этих случаях
+    лучше всего изменить режим выбора типа подключения с
+    <code class="literal">autoselect</code> на правильный тип.
+    Обычно это работает для большинства оборудования, но не может
+    решить проблему во всех случаях.  Проверьте еще раз настройки сети
+    и прочтите страницу справочника <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=tuning&amp;sektion=7"><span class="citerefentry"><span class="refentrytitle">tuning</span>(7)</span></a>.</p></div></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="configtuning-rcd.html">Пред.</a> </td><td width="20%" align="center"><a accesskey="u" href="config-tuning.html">Наверх</a></td><td width="40%" align="right"> <a accesskey="n" href="configtuning-virtual-hosts.html">След.</a></td></tr><tr><td width="40%" align="left" valign="top">12.7. Использование rc во FreeBSD 5.X и последующих версиях </td><td width="20%" align="center"><a accesskey="h" href="index.html">Начало</a></td><td width="40%" align="right" valign="top"> 12.9. Настройка виртуальных серверов</td></tr></table></div><p xmlns="http://www.w3.org/TR/xhtml1/transitional" align="center"><small>Этот, и другие документы, могут быть скачаны с
+    <a href="http://ftp.FreeBSD.org/pub/FreeBSD/doc/">http://ftp.FreeBSD.org/pub/FreeBSD/doc/</a>.</small></p><p xmlns="http://www.w3.org/TR/xhtml1/transitional" align="center"><small>По вопросам, связанным с FreeBSD, прочитайте
+    <a href="http://www.FreeBSD.org/ru/docs.html">документацию</a> прежде чем писать в
+    &lt;<a href="mailto:questions@FreeBSD.org">questions@FreeBSD.org</a>&gt;.<br></br>
+    По вопросам, связанным с этой документацией, пишите в рассылку
+    &lt;<a href="mailto:doc@FreeBSD.org">doc@FreeBSD.org</a>&gt;.<br></br></small></p></body></html>

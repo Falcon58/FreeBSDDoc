@@ -1,22 +1,13 @@
 <resources>
     <string name="app_name">FreeBSDDoc</string>
     <string-array name="doc_array">
-        <item>Menu_1</item>
-        <item>Menu_2</item>
-        <item>Menu_3</item>
-        <item>Menu_4</item>
-        <item>Menu_5</item>
-        <item>Menu_6</item>
-        <item>Menu_7</item>
-    </string-array>
-    <string-array name="doc_text">
-        <item>Text_1</item>
-        <item>Text_2</item>
-        <item>Text_3</item>
-        <item>Text_4</item>
-        <item>Text_5</item>
-        <item>Text_6</item>
-        <item>Text_7</item>
+        <item>Коллекция портов</item>
+        <item>Компиляция ядра</item>
+        <item>Основные настрйоки</item>
+        <item>Управление питанием</item>
+        <item>USB устройства</item>
+        <item>Настройка сети</item>
+        <item>Обновление FreeBSD</item>
     </string-array>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>

@@ -3,6 +3,7 @@ package com.falcon_host.freebsddoc;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
@@ -11,12 +12,15 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Locale;
 
 public class MainActivity extends Activity {
@@ -102,11 +106,58 @@ public class MainActivity extends Activity {
             View rootView = inflater.inflate(R.layout.fragment_text, container, false);
             int i = getArguments().getInt("NUMBER");
             String docTitle = getResources().getStringArray(R.array.doc_array)[i];
-            String docText = getResources().getStringArray(R.array.doc_text)[i];
-            TextView Text = (TextView)rootView.findViewById(R.id.doc_text);
-            Text.setText(docText);
+            Resources r = this.getResources();
+            InputStream input;
+            switch(i)
+            {
+                case 0:
+                    input = r.openRawResource(R.raw.file_0);
+                    break;
+                case 1:
+                    input = r.openRawResource(R.raw.file_1);
+                    break;
+                case 2:
+                    input = r.openRawResource(R.raw.file_2);
+                    break;
+                case 3:
+                    input = r.openRawResource(R.raw.file_3);
+                    break;
+                case 4:
+                    input = r.openRawResource(R.raw.file_4);
+                    break;
+                case 5:
+                    input = r.openRawResource(R.raw.file_5);
+                    break;
+                case 6:
+                    input = r.openRawResource(R.raw.file_6);
+                    break;
+                default:
+                    input = r.openRawResource(R.raw.file_0);
+            }
+            try
+            {
+                String temp = toString(input);
+                input.close();
+                WebView Web = (WebView)rootView.findViewById(R.id.doc_text);
+                Web.loadData(temp, "text/html", "utf-8");
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
             getActivity().setTitle(docTitle);
             return rootView;
+        }
+        public String toString(InputStream in) throws IOException
+        {
+            ByteArrayOutputStream temp = new ByteArrayOutputStream();
+            int i = in.read();
+            while(i != -1)
+            {
+                temp.write(i);
+                i = in.read();
+            }
+            return temp.toString();
         }
     }
 }

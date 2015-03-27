@@ -1,0 +1,91 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=koi8-r" /><title>17.5. USB устройства хранения</title><link rel="stylesheet" type="text/css" href="docbook.css" /><link rev="made" href="mailto:doc@FreeBSD.org" /><meta name="generator" content="DocBook XSL Stylesheets V1.78.1" /><link rel="home" href="index.html" title="Руководство FreeBSD" /><link rel="up" href="disks.html" title="Глава 17. Устройства хранения" /><link rel="prev" href="raid.html" title="17.4. RAID" /><link rel="next" href="creating-cds.html" title="17.6. Запись и использование оптических носителей (CD)" /><link rel="copyright" href="legalnotice.html" title="Юридическое уведомление" /><script xmlns="" type="text/javascript" src="/layout/js/google.js"></script></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">17.5. USB устройства хранения</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="raid.html">Пред.</a> </td><th width="60%" align="center">Глава 17. Устройства хранения</th><td width="20%" align="right"> <a accesskey="n" href="creating-cds.html">След.</a></td></tr></table><hr /></div><div class="sect1"><div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both"><a id="usb-disks"></a>17.5. USB устройства хранения</h2></div><div><span class="authorgroup">Предоставил <span xmlns="http://www.w3.org/1999/xhtml" class="author"><span class="firstname">Marc</span> <span class="surname">Fonvieille</span></span>. </span></div></div></div><a id="idp86851920" class="indexterm"></a><p>Множество современных устройств хранения используют Universal
+    Serial Bus (USB): жесткие диски, брелоки USB, CD-R приводы,
+    и т.д.  FreeBSD предоставляет поддержку этих устройств.</p><div class="sect2"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="idp86853584"></a>17.5.1. Настройка</h3></div></div></div><p>Драйвер <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=umass&amp;sektion=4"><span class="citerefentry"><span class="refentrytitle">umass</span>(4)</span></a> предоставляет поддержку устройств
+    хранения USB.  Если вы используете <code class="filename">GENERIC</code>
+    ядро, изменять что-либо в настройках не потребуется.  Если вы
+    используете настроенное ядро, убедитесь, что в файле настройки
+    присутствуют следующие строки:</p><pre class="programlisting">device scbus
+device da
+device pass
+device uhci
+device ohci
+device ehci
+device usb
+device umass</pre><p>Для доступа к устройствам хранения USB драйвер <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=umass&amp;sektion=4"><span class="citerefentry"><span class="refentrytitle">umass</span>(4)</span></a>
+    использует подсистему SCSI, ваши устройства USB будут видны
+    системе как SCSI устройства.  В зависимости от чипсета USB
+    на материнской плате, для включения поддержки USB 1.X вам потребуется только один из параметров
+    <code class="literal">device uhci</code> или <code class="literal">device ohci</code>.
+    Однако, наличие обоих этих параметров не помешает.  Поддержка
+    контроллеров USB 2.0 предоставляется драйвером <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=ehci&amp;sektion=4"><span class="citerefentry"><span class="refentrytitle">ehci</span>(4)</span></a> (строка
+    <code class="literal">device ehci</code>).  Не забудьте
+    скомпилировать и установить новое ядро после добавления каких-либо
+    строк.</p><div xmlns="" class="note"><h3 class="admontitle">Примечание: </h3><p xmlns="http://www.w3.org/1999/xhtml">Если ваше USB устройство это пишущий привод CD-R или DVD,
+    необходимо добавить
+    в ядро SCSI CD-ROM драйвер, <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=cd&amp;sektion=4"><span class="citerefentry"><span class="refentrytitle">cd</span>(4)</span></a>, следующей строкой:</p><pre xmlns="http://www.w3.org/1999/xhtml" class="programlisting">device cd</pre><p xmlns="http://www.w3.org/1999/xhtml">Поскольку устройство записи видно как SCSI диск, драйвер
+    <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=atapicam&amp;sektion=4"><span class="citerefentry"><span class="refentrytitle">atapicam</span>(4)</span></a> не должен использоваться в файле
+    настройки.</p></div></div><div class="sect2"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="idp86862544"></a>17.5.2. Тестирование конфигурации</h3></div></div></div><p>Конфигурация готова к тестированию, подключите устройство USB,
+    и в буфере системных сообщений (<a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=dmesg&amp;sektion=8"><span class="citerefentry"><span class="refentrytitle">dmesg</span>(8)</span></a>), диск должен
+    отобразиться примерно так:</p><pre class="screen">umass0: USB Solid state disk, rev 1.10/1.00, addr 2
+GEOM: create disk da0 dp=0xc2d74850
+da0 at umass-sim0 bus 0 target 0 lun 0
+da0: &lt;Generic Traveling Disk 1.11&gt; Removable Direct Access SCSI-2 device
+da0: 1.000MB/s transfers
+da0: 126MB (258048 512 byte sectors: 64H 32S/T 126C)</pre><p>Конечно, производитель, имя устройства
+    (<code class="filename">da0</code>) и другие детали могут
+    отличаться в зависимости от конфигурации.</p><p>Поскольку устройство USB видится как SCSI, команда
+    <code class="command">camcontrol</code> может быть использована для
+    вывода списка устройств хранения USB, подключенных к системе:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>camcontrol devlist</code></strong>
+&lt;Generic Traveling Disk 1.11&gt;      at scbus0 target 0 lun 0 (da0,pass0)</pre><p>Если на диске есть файловая система, у вас должна быть
+    возможность смонтировать ее.  <a class="xref" href="disks-adding.html" title="17.3. Добавление дисков">Раздел 17.3, <<Добавление дисков>></a>
+    поможет вам создать и отформатировать разделы на диске
+    USB если потребуется.</p><div xmlns="" class="warning"><h3 class="admontitle">Предупреждение: </h3><p xmlns="http://www.w3.org/1999/xhtml">Ниже описанный механизм (<code class="literal">vfs.usermount</code>),
+    допускающий монтирование случайных носителей пользователями,
+    не являющимися доверенными, считается небезопасным.  Большинство
+    файловых систем во FreeBSD никак не ограждено от возможности
+    <span class="emphasis"><em>несанкционированного</em></span> монтирования
+    устройств.</p></div><p>Чтобы это устройство мог смонтировать обычный пользователь,
+    необходимо выполнить определенные действия.  Для начала, необходимо
+    дать обычным пользователям доступ к устройствам, создаваемым при
+    подключении USB устройства.  Решение состоит во включении всех
+    пользователей данных устройств в группу <code class="systemitem">operator</code>.
+    Это делается утилитой  <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=pw&amp;sektion=8"><span class="citerefentry"><span class="refentrytitle">pw</span>(8)</span></a>.  Затем, когда устройства созданы,
+    у группы <code class="systemitem">operator</code> должен быть доступ на
+    чтение и запись для этих устройств.  Это выполняется путем добавления
+    следующих строк в <code class="filename">/etc/devfs.rules</code>:</p><pre class="programlisting">[localrules=5]
+add path 'da*' mode 0660 group operator</pre><div xmlns="" class="note"><h3 class="admontitle">Примечание: </h3><p xmlns="http://www.w3.org/1999/xhtml">Если к системе подключены SCSI диски, это должно быть сделано
+    немного иначе.  Так, если в системе уже есть диски с
+    <code class="filename">da0</code> по <code class="filename">da2</code>,
+    вторая строка должна выглядеть так:</p><pre xmlns="http://www.w3.org/1999/xhtml" class="programlisting">add path 'da[3-9]*' mode 0660 group operator</pre><p xmlns="http://www.w3.org/1999/xhtml">Это исключит уже существующие диски из группы
+    <code class="systemitem">operator</code>.</p></div><p>Вам также потребуется включить набор правил <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=devfs.rules&amp;sektion=5"><span class="citerefentry"><span class="refentrytitle">devfs.rules</span>(5)</span></a>
+    в файл <code class="filename">/etc/rc.conf</code>:</p><pre class="programlisting">devfs_system_ruleset="localrules"</pre><p>Затем, ядро необходимо настроить так, чтобы оно позволяло обычным
+    пользователям монтировать файловые системы.  Простейший способ сделать
+    это - добавить в файл <code class="filename">/etc/sysctl.conf</code>
+    следующую строку:</p><pre class="programlisting">vfs.usermount=1</pre><p>Этот параметр установится только после последующей перезагрузки.
+    Для установки этой переменной можно также использовать
+    <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=sysctl&amp;sektion=8"><span class="citerefentry"><span class="refentrytitle">sysctl</span>(8)</span></a>.</p><p>Последний шаг - создание каталога, куда будет монтироваться
+    файловая система.  Каталог должен принадлежать пользователю,
+    монтирующему файловую систему.  Один из способов сделать это
+    под пользователем <code class="systemitem">root</code> - создать каталог
+    <code class="filename">/mnt/<em class="replaceable"><code>username</code></em></code>
+    (замените <em class="replaceable"><code>username</code></em> именем
+    пользователя, а <em class="replaceable"><code>usergroup</code></em> - именем
+    главной группы пользователя):</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>mkdir /mnt/<em class="replaceable"><code>username</code></em></code></strong>
+<code class="prompt">#</code> <strong class="userinput"><code>chown <em class="replaceable"><code>username</code></em>:<em class="replaceable"><code>usergroup</code></em> /mnt/<em class="replaceable"><code>username</code></em></code></strong></pre><p>Предположим, что USB брелок подключен, и появилось устройство
+    <code class="filename">/dev/da0s1</code>.  Поскольку эти устройства обычно поставляются
+    форматированными с файловой системой FAT, их можно смонтировать так:</p><pre class="screen"><code class="prompt">%</code> <strong class="userinput"><code>mount -t msdosfs -o -m=644,-M=755 /dev/da0s1 /mnt/<em class="replaceable"><code>username</code></em></code></strong></pre><p>Если вы отключите устройство (диск должен быть сначала
+    размонтирован), вы должны увидеть в буфере системных сообщений
+    что-то подобное:</p><pre class="screen">umass0: at uhub0 port 1 (addr 2) disconnected
+(da0:umass-sim0:0:0:0): lost device
+(da0:umass-sim0:0:0:0): removing device entry
+GEOM: destroy disk da0 dp=0xc2d74850
+umass0: detached</pre></div><div class="sect2"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="idp86896336"></a>17.5.3. Дополнительная информация</h3></div></div></div><p>Помимо разделов <a class="link" href="disks-adding.html" title="17.3. Добавление дисков">Добавление
+    дисков</a> и <a class="link" href="mount-unmount.html" title="4.7. Монтирование и размонтирование файловых систем">Монтирование
+    и размонтирование файловых систем</a>, также может быть полезно
+    чтение различных страниц справочника: <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=umass&amp;sektion=4"><span class="citerefentry"><span class="refentrytitle">umass</span>(4)</span></a>,
+    <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=camcontrol&amp;sektion=8"><span class="citerefentry"><span class="refentrytitle">camcontrol</span>(8)</span></a>, и <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=usbconfig&amp;sektion=8"><span class="citerefentry"><span class="refentrytitle">usbconfig</span>(8)</span></a> для FreeBSD  8.X или <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=usbdevs&amp;sektion=8"><span class="citerefentry"><span class="refentrytitle">usbdevs</span>(8)</span></a> для более ранних версий FreeBSD.</p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="raid.html">Пред.</a> </td><td width="20%" align="center"><a accesskey="u" href="disks.html">Наверх</a></td><td width="40%" align="right"> <a accesskey="n" href="creating-cds.html">След.</a></td></tr><tr><td width="40%" align="left" valign="top">17.4. RAID </td><td width="20%" align="center"><a accesskey="h" href="index.html">Начало</a></td><td width="40%" align="right" valign="top"> 17.6. Запись и использование оптических носителей (CD)</td></tr></table></div><p xmlns="http://www.w3.org/TR/xhtml1/transitional" align="center"><small>Этот, и другие документы, могут быть скачаны с
+    <a href="http://ftp.FreeBSD.org/pub/FreeBSD/doc/">http://ftp.FreeBSD.org/pub/FreeBSD/doc/</a>.</small></p><p xmlns="http://www.w3.org/TR/xhtml1/transitional" align="center"><small>По вопросам, связанным с FreeBSD, прочитайте
+    <a href="http://www.FreeBSD.org/ru/docs.html">документацию</a> прежде чем писать в
+    &lt;<a href="mailto:questions@FreeBSD.org">questions@FreeBSD.org</a>&gt;.<br></br>
+    По вопросам, связанным с этой документацией, пишите в рассылку
+    &lt;<a href="mailto:doc@FreeBSD.org">doc@FreeBSD.org</a>&gt;.<br></br></small></p></body></html>

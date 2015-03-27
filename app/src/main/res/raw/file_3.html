@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=koi8-r" /><title>12.15. Управление питанием и ресурсами</title><link rel="stylesheet" type="text/css" href="docbook.css" /><link rev="made" href="mailto:doc@FreeBSD.org" /><meta name="generator" content="DocBook XSL Stylesheets V1.78.1" /><link rel="home" href="index.html" title="Руководство FreeBSD" /><link rel="up" href="config-tuning.html" title="Глава 12. Настройка и оптимизация" /><link rel="prev" href="adding-swap-space.html" title="12.14. Увеличение объема подкачки" /><link rel="next" href="ACPI-debug.html" title="12.16. Использование и отладка FreeBSD ACPI" /><link rel="copyright" href="legalnotice.html" title="Юридическое уведомление" /><script xmlns="" type="text/javascript" src="/layout/js/google.js"></script></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">12.15. Управление питанием и ресурсами</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="adding-swap-space.html">Пред.</a> </td><th width="60%" align="center">Глава 12. Настройка и оптимизация</th><td width="20%" align="right"> <a accesskey="n" href="ACPI-debug.html">След.</a></td></tr></table><hr /></div><div class="sect1"><div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both"><a id="acpi-overview"></a>12.15. Управление питанием и ресурсами</h2></div><div><span class="authorgroup">Написал <span xmlns="http://www.w3.org/1999/xhtml" class="author"><span class="firstname">Hiten</span> <span class="surname">Pandya</span></span>  <span xmlns="http://www.w3.org/1999/xhtml" class="author"><span class="firstname">Tom</span> <span class="surname">Rhodes</span></span>. </span></div></div></div><p>Очень важно использовать аппаратные ресурсы эффективно.
+    До того, как появился <acronym class="acronym">ACPI</acronym>, управление
+    потреблением питания и температурными характеристиками системы
+    было очень сложной для операционной системы задачей.  Аппаратное
+    обеспечение контролировалось одним из видов встроенного интерфейса
+    <acronym class="acronym">BIOS</acronym>, таким как: <span class="emphasis"><em>Plug and Play BIOS
+        (PNPBIOS)</em></span>, <span class="emphasis"><em>Advanced Power Management
+        (APM)</em></span> и так далее.  Управление питанием и ресурсами
+    это один из ключевых компонентов современной операционной системы.
+    Например, вам может потребоваться, чтобы операционная система
+    следила за температурными ограничениями и возможно, предупреждала
+    при неожиданном росте температуры.</p><p>В этом разделе Руководства FreeBSD, мы предоставим исчерпывающую
+    информацию о <acronym class="acronym">ACPI</acronym>.  В конце раздела есть ссылки
+    для дальнейшего чтения.</p><div class="sect2"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="acpi-intro"></a>12.15.1. Что такое ACPI?</h3></div></div></div><a id="idp83017680" class="indexterm"></a><a id="idp83051344" class="indexterm"></a><p>Advanced Configuration and Power Interface
+    (<acronym class="acronym">ACPI</acronym>) это стандарт, написанный объединением
+    поставщиков в целях предоставления стандартного интерфейса для
+    аппаратных ресурсов и управления питанием (отсюда и название).
+    Это ключевой элемент <span class="emphasis"><em>Operating System-directed
+        configuration and Power Management</em></span>, т.е.: он предоставляет
+    операционной системе (<acronym class="acronym">OS</acronym>) больше контроля и более
+    универсален.  Современные системы вышли за пределы ограничений
+    существующих Plug and Play интерфейсов до появления
+    <acronym class="acronym">ACPI</acronym>.  <acronym class="acronym">ACPI</acronym> это прямой
+    наследник <acronym class="acronym">APM</acronym> (Advanced Power Management).</p></div><div class="sect2"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="acpi-old-spec"></a>12.15.2. Недостатки Advanced Power Management (APM)</h3></div></div></div><p>Средства <span class="emphasis"><em>Advanced Power Management (APM)</em></span>
+    управляют энергопотреблением системы в зависимости от
+    нагрузки.  APM BIOS предоставляется поставщиком системы и
+    специфичен для данной аппаратной платформы.  Драйвер APM
+    в OS обеспечивает доступ к <span class="emphasis"><em>APM Software Interface</em></span>,
+    который позволяет управлять уровнями потребления питания.</p><p>В APM имеется четыре основных проблемы.  Во-первых, управление
+    энергопотреблением осуществляется через зависимый от поставщика
+    BIOS, и OS ничего не знает нем.  Один пример: когда пользователь
+    устанавливает время ожидания для жесткого диска в APM BIOS,
+    и это время истекает, BIOS останавливает жесткий диск без согласования
+    с OS.  Во-вторых, алгоритм APM встроен в BIOS, и все действия
+    происходят вне контроля OS.  Это означает, что пользователи
+    могут решить проблемы с APM BIOS только путем перепрошивки
+    его ROM; это очень опасная процедура, и если она завершится
+    неудачно, система может оказаться в невосстановимом состоянии.
+    В-третьих, реализация технологии APM зависит от поставщика,
+    что означает дублирование усилий и если в BIOS одного
+    из поставщиков будет найдена и исправлена ошибка, ее могли
+    не исправить другие поставщики.  Наконец, объем APM BIOS недостаточно
+    велик для реализации сложной политики управления питанием, или
+    такой политики, которая может хорошо адаптироваться к потребностям
+    компьютера.</p><p><span class="emphasis"><em>Plug and Play BIOS (PNPBIOS)</em></span> был неудобен
+    во многих ситуациях.  PNPBIOS это 16-битная технология,
+    поэтому OS требовалось использовать 16-битную эмуляцию для
+    <span class="quote"><<<span class="quote">взаимодействия</span>>></span> с методами PNPBIOS.</p><p>FreeBSD драйвер <acronym class="acronym">APM</acronym> документирован в странице
+    справочника <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=apm&amp;sektion=4"><span class="citerefentry"><span class="refentrytitle">apm</span>(4)</span></a>.</p></div><div class="sect2"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="acpi-config"></a>12.15.3. Настройка <acronym class="acronym">ACPI</acronym></h3></div></div></div><p><a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=loader&amp;sektion=8"><span class="citerefentry"><span class="refentrytitle">loader</span>(8)</span></a> загружает драйвер <code class="filename">acpi.ko</code> по
+    умолчанию, его <span class="emphasis"><em>не</em></span> надо встраивать в ядро.
+    Причина в том, что с модулями проще работать, например переключиться
+    на другой <code class="filename">acpi.ko</code> без пересборки ядра.
+    Преимущество в упрощении тестирования.  Другая причина в том, что
+    запуск <acronym class="acronym">ACPI</acronym> после старта системы не очень полезен
+    и при некоторых условиях может приводить к краху.  Если вы
+    сомневаетесь,  отключите <acronym class="acronym">ACPI</acronym> совсем.  Драйвер не
+    должен и не может быть выгружен, поскольку системная шина используется
+    для различных взаимодействий оборудования.  <acronym class="acronym">ACPI</acronym>
+    может быть выключен с помощью утилиты <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=acpiconf&amp;sektion=8"><span class="citerefentry"><span class="refentrytitle">acpiconf</span>(8)</span></a>.  Фактически
+    большинство взаимодействий с <acronym class="acronym">ACPI</acronym> может быть
+    выполнено через <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=acpiconf&amp;sektion=8"><span class="citerefentry"><span class="refentrytitle">acpiconf</span>(8)</span></a>.  В основном это означает, что если в
+    выводе <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=dmesg&amp;sektion=8"><span class="citerefentry"><span class="refentrytitle">dmesg</span>(8)</span></a> есть что-то об <acronym class="acronym">ACPI</acronym>, он скорее
+    всего работает.</p><div xmlns="" class="note"><h3 class="admontitle">Примечание: </h3><p xmlns="http://www.w3.org/1999/xhtml"><acronym class="acronym">ACPI</acronym> и <acronym class="acronym">APM</acronym> не могут
+    сосуществовать и должны использоваться раздельно.  Каждый из них
+    прервет загрузку, если обнаружит загруженный драйвер
+    другого.</p></div><p>В простейшей форме, <acronym class="acronym">ACPI</acronym> может использоваться
+    для перевода системы в спящий режим с помощью <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=acpiconf&amp;sektion=8"><span class="citerefentry"><span class="refentrytitle">acpiconf</span>(8)</span></a>, с
+    флагом <code class="option">-s</code> и параметром <code class="literal">1-5</code>.
+    Большинству пользователей нужен только параметр <code class="literal">1</code>.
+    Параметр <code class="literal">5</code> сделает <span class="quote"><<<span class="quote">мягкое</span>>></span>
+    завершение работы, так же как и:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>halt -p</code></strong></pre><p>Доступны и другие параметры.  Обратитесь к странице справочника
+    <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=acpiconf&amp;sektion=8"><span class="citerefentry"><span class="refentrytitle">acpiconf</span>(8)</span></a> за дополнительной информацией.</p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="adding-swap-space.html">Пред.</a> </td><td width="20%" align="center"><a accesskey="u" href="config-tuning.html">Наверх</a></td><td width="40%" align="right"> <a accesskey="n" href="ACPI-debug.html">След.</a></td></tr><tr><td width="40%" align="left" valign="top">12.14. Увеличение объема подкачки </td><td width="20%" align="center"><a accesskey="h" href="index.html">Начало</a></td><td width="40%" align="right" valign="top"> 12.16. Использование и отладка FreeBSD <acronym class="acronym">ACPI</acronym></td></tr></table></div><p xmlns="http://www.w3.org/TR/xhtml1/transitional" align="center"><small>Этот, и другие документы, могут быть скачаны с
+    <a href="http://ftp.FreeBSD.org/pub/FreeBSD/doc/">http://ftp.FreeBSD.org/pub/FreeBSD/doc/</a>.</small></p><p xmlns="http://www.w3.org/TR/xhtml1/transitional" align="center"><small>По вопросам, связанным с FreeBSD, прочитайте
+    <a href="http://www.FreeBSD.org/ru/docs.html">документацию</a> прежде чем писать в
+    &lt;<a href="mailto:questions@FreeBSD.org">questions@FreeBSD.org</a>&gt;.<br></br>
+    По вопросам, связанным с этой документацией, пишите в рассылку
+    &lt;<a href="mailto:doc@FreeBSD.org">doc@FreeBSD.org</a>&gt;.<br></br></small></p></body></html>
