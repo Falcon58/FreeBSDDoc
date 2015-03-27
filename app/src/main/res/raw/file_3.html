@@ -11,7 +11,7 @@
     следила за температурными ограничениями и возможно, предупреждала
     при неожиданном росте температуры.</p><p>В этом разделе Руководства FreeBSD, мы предоставим исчерпывающую
     информацию о <acronym class="acronym">ACPI</acronym>.  В конце раздела есть ссылки
-    для дальнейшего чтения.</p><div class="sect2"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="acpi-intro"></a>12.15.1. Что такое ACPI?</h3></div></div></div><a id="idp83017680" class="indexterm"></a><a id="idp83051344" class="indexterm"></a><p>Advanced Configuration and Power Interface
+    для дальнейшего чтения.</p><div class="sect2"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="acpi-intro"></a> Что такое ACPI?</h3></div></div></div><a id="idp83017680" class="indexterm"></a><a id="idp83051344" class="indexterm"></a><p>Advanced Configuration and Power Interface
     (<acronym class="acronym">ACPI</acronym>) это стандарт, написанный объединением
     поставщиков в целях предоставления стандартного интерфейса для
     аппаратных ресурсов и управления питанием (отсюда и название).
@@ -21,7 +21,7 @@
     универсален.  Современные системы вышли за пределы ограничений
     существующих Plug and Play интерфейсов до появления
     <acronym class="acronym">ACPI</acronym>.  <acronym class="acronym">ACPI</acronym> это прямой
-    наследник <acronym class="acronym">APM</acronym> (Advanced Power Management).</p></div><div class="sect2"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="acpi-old-spec"></a>12.15.2. Недостатки Advanced Power Management (APM)</h3></div></div></div><p>Средства <span class="emphasis"><em>Advanced Power Management (APM)</em></span>
+    наследник <acronym class="acronym">APM</acronym> (Advanced Power Management).</p></div><div class="sect2"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="acpi-old-spec"></a> Недостатки Advanced Power Management (APM)</h3></div></div></div><p>Средства <span class="emphasis"><em>Advanced Power Management (APM)</em></span>
     управляют энергопотреблением системы в зависимости от
     нагрузки.  APM BIOS предоставляется поставщиком системы и
     специфичен для данной аппаратной платформы.  Драйвер APM
@@ -46,7 +46,7 @@
     во многих ситуациях.  PNPBIOS это 16-битная технология,
     поэтому OS требовалось использовать 16-битную эмуляцию для
     <span class="quote"><<<span class="quote">взаимодействия</span>>></span> с методами PNPBIOS.</p><p>FreeBSD драйвер <acronym class="acronym">APM</acronym> документирован в странице
-    справочника <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=apm&amp;sektion=4"><span class="citerefentry"><span class="refentrytitle">apm</span>(4)</span></a>.</p></div><div class="sect2"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="acpi-config"></a>12.15.3. Настройка <acronym class="acronym">ACPI</acronym></h3></div></div></div><p><a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=loader&amp;sektion=8"><span class="citerefentry"><span class="refentrytitle">loader</span>(8)</span></a> загружает драйвер <code class="filename">acpi.ko</code> по
+    справочника <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=apm&amp;sektion=4"><span class="citerefentry"><span class="refentrytitle">apm</span>(4)</span></a>.</p></div><div class="sect2"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="acpi-config"></a> Настройка <acronym class="acronym">ACPI</acronym></h3></div></div></div><p><a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=loader&amp;sektion=8"><span class="citerefentry"><span class="refentrytitle">loader</span>(8)</span></a> загружает драйвер <code class="filename">acpi.ko</code> по
     умолчанию, его <span class="emphasis"><em>не</em></span> надо встраивать в ядро.
     Причина в том, что с модулями проще работать, например переключиться
     на другой <code class="filename">acpi.ko</code> без пересборки ядра.

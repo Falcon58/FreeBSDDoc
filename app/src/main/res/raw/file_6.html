@@ -19,7 +19,7 @@
     на которую намечен переход.  С соответствующими объявлениями можно
     ознакомиться, перейдя по следующей ссылке: <code class="uri"><a class="uri" href="http://www.FreeBSD.org/releases/" target="_top">http://www.FreeBSD.org/releases/</a></code>.</p></div><p>Если имеется задание <code class="command">crontab</code>, запускающее
     <code class="command">freebsd-update</code>, то перед началом выполнения
-    следующих действий его обязательно нужно выключить.</p><div class="sect2"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="idp89113296"></a>21.2.1. Конфигурационный файл</h3></div></div></div><p>Некоторые пользователи могут пожелать изменить
+    следующих действий его обязательно нужно выключить.</p><div class="sect2"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="idp89113296"></a> Конфигурационный файл</h3></div></div></div><p>Некоторые пользователи могут пожелать изменить
     конфигурационный файл для лучшего контроля над процессом
     обновления.  Все параметры подробно задокументированы, но
     для некоторых из них может понадобиться дополнительное
@@ -34,22 +34,22 @@ Components src world kernel</pre><p>Данный параметр определ
     потребует от пользователя указания подряд всех пунктов, которые
     пользователь захочет обновить.  Это может привести к негативным
     последствиям из-за возможной рассинхронизации между исходными
-    текстами и двоичными файлами.</p><pre class="programlisting"># Paths which start with anything matching an entry in an IgnorePaths
+    текстами и двоичными файлами.</p><pre class="programlisting"># Paths which start with anything matching an entry in an IgnorePaths<br>
 # statement will be ignored.
 IgnorePaths</pre><p>Добавьте сюда пути к каталогам (например, <code class="filename">/bin</code> или <code class="filename">/sbin</code>), которые вы хотели бы
     оставить нетронутыми в процессе обновления.  Этот параметр можно
     использовать для предотвращения перезаписывания локальных
-    изменений программой <code class="command">freebsd-update</code>.</p><pre class="programlisting"># Paths which start with anything matching an entry in an UpdateIfUnmodified
-# statement will only be updated if the contents of the file have not been
-# modified by the user (unless changes are merged; see below).
+    изменений программой <code class="command">freebsd-update</code>.</p><pre class="programlisting"># Paths which start with anything matching an entry in an UpdateIfUnmodified<br>
+# statement will only be updated if the contents of the file have not been<br>
+# modified by the user (unless changes are merged; see below).<br>
 UpdateIfUnmodified /etc/ /var/ /root/ /.cshrc /.profile</pre><p>Обновлять конфигурационные файлы в указанных каталогах, только
     если они не содержат изменений.  При наличии каких-либо изменений
     со стороны пользователя автоматическое обновление таких файлов
     отменяется.  Есть другой параметр
     <code class="literal">KeepModifiedMetadata</code>, который предписывает
     команде <code class="command">freebsd-update</code> сохранять изменения во
-    время процесса слияния.</p><pre class="programlisting"># When upgrading to a new FreeBSD release, files which match MergeChanges
-# will have any local changes merged into the version from the new release.
+    время процесса слияния.</p><pre class="programlisting"># When upgrading to a new FreeBSD release, files which match MergeChanges<br>
+# will have any local changes merged into the version from the new release.<br>
 MergeChanges /etc/ /var/named/etc/</pre><p>Список каталогов с конфигурационными файлами, для которых
     <code class="command">freebsd-update</code> попытается выполнить слияние.
     Процесс слияния файла представляет собой набор изменений
@@ -60,22 +60,22 @@ MergeChanges /etc/ /var/named/etc/</pre><p>Список каталогов с к
     копию <code class="filename">/etc</code> и просто
     согласитесь со всеми изменениями.  Для получения подробной
     информации по команде <code class="command">mergemaster</code> смотрите
-    <a class="xref" href="makeworld.html#mergemaster" title="21.6.11.1. mergemaster">Раздел 21.6.11.1, <<<code class="command">mergemaster</code>>></a>.</p><pre class="programlisting"># Directory in which to store downloaded updates and temporary
-# files used by FreeBSD Update.
+    <code class="command">mergemaster</code>.</p><pre class="programlisting"># Directory in which to store downloaded updates and temporary<br>
+# files used by FreeBSD Update.<br>
 # WorkDir /var/db/freebsd-update</pre><p>Этот каталог предназначен для размещения патчей и временных
     файлов.  В случае, когда пользователь выполняет обновление со сменой
     версии, в этом месте должен иметь по крайней мере гигабайт дискового
-    пространства.</p><pre class="programlisting"># When upgrading between releases, should the list of Components be
-# read strictly (StrictComponents yes) or merely as a list of components
-# which *might* be installed of which FreeBSD Update should figure out
-# which actually are installed and upgrade those (StrictComponents no)?
+    пространства.</p><pre class="programlisting"># When upgrading between releases, should the list of Components be<br>
+# read strictly (StrictComponents yes) or merely as a list of components<br>
+# which *might* be installed of which FreeBSD Update should figure out<br>
+# which actually are installed and upgrade those (StrictComponents no)?<br>
 # StrictComponents no</pre><p>Если выставлено значение <code class="literal">yes</code>, то
     <code class="command">freebsd-update</code> будет исходить из того, что
     список <code class="literal">Components</code> является полным, и не будет
     пытаться выполнить изменения за пределами этого списка.
     В действительности <code class="command">freebsd-update</code> попытается
     обновить все файлы, которые принадлежат списку
-    <code class="literal">Components</code>.</p></div><div class="sect2"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="idp89127504"></a>21.2.2. Обновления безопасности</h3></div></div></div><p>Обновления безопасности хранятся на удалённой машине и могут
+    <code class="literal">Components</code>.</p></div><div class="sect2"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="idp89127504"></a> Обновления безопасности</h3></div></div></div><p>Обновления безопасности хранятся на удалённой машине и могут
     быть загружены и установлены с использованием следующей
     команды:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>freebsd-update fetch</code></strong>
 <code class="prompt">#</code> <strong class="userinput"><code>freebsd-update install</code></strong></pre><p>Если были установлены обновления ядра, то после этого
@@ -98,7 +98,7 @@ MergeChanges /etc/ /var/named/etc/</pre><p>Список каталогов с к
     с ядром <code class="filename">GENERIC</code>.  Если в
     <code class="filename">GENERIC</code> присутствуют изменения или
     используется собственная конфигурация ядра,
-    <code class="command">freebsd-update</code> завершится неудачно.</p></div></div><div class="sect2"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="idp89147472"></a>21.2.3. Обновления со сменой старшей и младшей версий</h3></div></div></div><p>Этот процесс удаляет старые объектные файлы и библиотеки, что
+    <code class="command">freebsd-update</code> завершится неудачно.</p></div></div><div class="sect2"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="idp89147472"></a> Обновления со сменой старшей и младшей версий</h3></div></div></div><p>Этот процесс удаляет старые объектные файлы и библиотеки, что
     может нарушить работу большинства сторонних приложений.  Все
     установленные порты рекомендуется либо удалить и переустановить
     заново, либо обновить с использованием программы <a xmlns="" class="package" href="http://www.freebsd.org/cgi/url.cgi?ports/ports-mgmt/portupgrade/pkg-descr">ports-mgmt/portupgrade</a>.  Большинство
@@ -117,20 +117,20 @@ MergeChanges /etc/ /var/named/etc/</pre><p>Список каталогов с к
     необходимую для проведения обновления информацию о текущей
     установленной системе.  На экран будет выдан перечень компонентов,
     которые удалось и не удалось обнаружить установленными.
-    Например:</p><pre class="screen">Looking up update.FreeBSD.org mirrors... 1 mirrors found.
-Fetching metadata signature for 6.3-BETA1 from update1.FreeBSD.org... done.
-Fetching metadata index... done.
-Inspecting system... done.
+    Например:</p><pre class="screen">Looking up update.FreeBSD.org mirrors... 1 mirrors found.<br>
+Fetching metadata signature for 6.3-BETA1 from update1.FreeBSD.org... done.<br>
+Fetching metadata index... done.<br>
+Inspecting system... done.<br>
 
-The following components of FreeBSD seem to be installed:
-kernel/smp src/base src/bin src/contrib src/crypto src/etc src/games
-src/gnu src/include src/krb5 src/lib src/libexec src/release src/rescue
-src/sbin src/secure src/share src/sys src/tools src/ubin src/usbin
-world/base world/info world/lib32 world/manpages
+The following components of FreeBSD seem to be installed:<br>
+kernel/smp src/base src/bin src/contrib src/crypto src/etc src/games<br>
+src/gnu src/include src/krb5 src/lib src/libexec src/release src/rescue<br>
+src/sbin src/secure src/share src/sys src/tools src/ubin src/usbin<br>
+world/base world/info world/lib32 world/manpages<br>
 
-The following components of FreeBSD do not seem to be installed:
-kernel/generic world/catpages world/dict world/doc world/games
-world/proflibs
+The following components of FreeBSD do not seem to be installed:<br>
+kernel/generic world/catpages world/dict world/doc world/games<br>
+world/proflibs<br>
 
 Does this look reasonable (y/n)? y</pre><p>Следующим шагом <code class="command">freebsd-update</code> попытается
     загрузить по сети файлы, необходимые для выполнения обновления.
@@ -173,7 +173,7 @@ Does this look reasonable (y/n)? y</pre><p>Следующим шагом <code c
 <code class="prompt">#</code> <strong class="userinput"><code>portupgrade -af</code></strong></pre><p>После этого завершите процесс обновления последним запуском
     <code class="command">freebsd-update</code>.  Выполните следующую команду,
     чтобы убедиться, что ничего не забыто в процессе обновления:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>freebsd-update install</code></strong></pre><p>Перезагрузите компьютер с новой версией FreeBSD.  На этом процесс
-    завершён.</p></div><div class="sect2"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="idp89189968"></a>21.2.4. Сравнение состояния системы</h3></div></div></div><p>Утилита <code class="command">freebsd-update</code> может быть
+    завершён.</p></div><div class="sect2"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="idp89189968"></a> Сравнение состояния системы</h3></div></div></div><p>Утилита <code class="command">freebsd-update</code> может быть
     использована для проверки состояния установленной версии FreeBSD
     относительно известной хорошей копии.  Оценивается текущая версия
     системных утилит, библиотек и конфигурационных файлов.  Для того,
@@ -198,9 +198,9 @@ Does this look reasonable (y/n)? y</pre><p>Следующим шагом <code c
     <code class="filename">outfile.ids</code>.</p><p>Эти строки также очень длинные, но зато такой формат вывода
     удобен для разбора.  Так, для получения списка всех отличающихся
     от релиза файлов достаточно выполнить такую команду:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>cat outfile.ids | awk '{ print $1 }' | more</code></strong>
-/etc/master.passwd
-/etc/motd
-/etc/passwd
+/etc/master.passwd<br>
+/etc/motd<br>
+/etc/passwd<br>
 /etc/pf.conf</pre><p>Вывод специально обрезан, на самом деле файлов намного больше.
     Некоторые из них изменены в ходе нормальной работы: так, файл
     <code class="filename">/etc/passwd</code> был изменён после заведения

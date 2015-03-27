@@ -25,8 +25,7 @@
     изменить имена каталогов.</p><div xmlns="" class="note"><h3 class="admontitle">Примечание: </h3><p xmlns="http://www.w3.org/1999/xhtml">Если каталог <code class="filename">/usr/src/</code> отсутствует в вашей
     системе (или этот каталог пуст), то это значит, что исходные тексты
     не были установлены.  Наиболее простой способ установить их
-    - воспользоваться <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=csup&amp;sektion=1"><span class="citerefentry"><span class="refentrytitle">csup</span>(1)</span></a>, как описано в
-    <a class="xref" href="synching.html" title="21.5. Синхронизация ваших исходных текстов">Раздел 21.5, Синхронизация ваших исходных текстов</a>.  Далее, создайте символическую ссылку на
+    - воспользоваться <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=csup&amp;sektion=1"><span class="citerefentry"><span class="refentrytitle">csup</span>(1)</span></a>.  Далее, создайте символическую ссылку на
     <code class="filename">/usr/src/sys/</code>:</p><pre xmlns="http://www.w3.org/1999/xhtml" class="screen"><code class="prompt">#</code> <strong class="userinput"><code>ln -s /usr/src/sys /sys</code></strong></pre></div><p>Затем, перейдите в каталог
     <code class="filename"><em class="replaceable"><code>arch</code></em>/conf</code>
     и скопируйте файл конфигурации <code class="filename">GENERIC</code>
@@ -40,36 +39,36 @@
     все с начала.  После этого обычно требуется несколько секунд, чтобы
     понять, что вы удалили собственный файл настройки ядра.  Не
     редактируйте непосредственно <code class="filename">GENERIC</code>, он может
-    быть также перезаписан и при следующем <a class="link" href="updating-upgrading.html" title="Глава 21. Обновление системы и смена версии">обновлении дерева исходных текстов</a>,
+    быть также перезаписан и при следующем обновлении дерева исходных текстов,
     и изменения ядра будут потеряны.</p><p xmlns="http://www.w3.org/1999/xhtml">Вы можете сохранить файл конфигурации ядра в другом месте,
     а затем создать символическую ссылку на этот файл в каталоге
     <code class="filename"><em class="replaceable"><code>i386</code></em></code>.</p><p xmlns="http://www.w3.org/1999/xhtml">Например:</p><pre xmlns="http://www.w3.org/1999/xhtml" class="screen"><code class="prompt">#</code> <strong class="userinput"><code>cd /usr/src/sys/<em class="replaceable"><code>i386</code></em>/conf</code></strong>
-<code class="prompt">#</code> <strong class="userinput"><code>mkdir /root/kernels</code></strong>
-<code class="prompt">#</code> <strong class="userinput"><code>cp GENERIC /root/kernels/<em class="replaceable"><code>MYKERNEL</code></em></code></strong>
+<code class="prompt">#</code> <strong class="userinput"><code>mkdir /root/kernels</code></strong><br>
+<code class="prompt">#</code> <strong class="userinput"><code>cp GENERIC /root/kernels/<em class="replaceable"><code>MYKERNEL</code></em></code></strong><br>
 <code class="prompt">#</code> <strong class="userinput"><code>ln -s /root/kernels/<em class="replaceable"><code>MYKERNEL</code></em></code></strong></pre></div><p>Теперь отредактируйте файл <code class="filename"><em class="replaceable"><code>MYKERNEL</code></em></code> в своём
     любимом текстовом редакторе.  Если вы только начинаете, единственным
     доступным редактором скорее всего будет <span class="application">vi</span>,
     который слишком сложен для того, чтобы описать его здесь,
-    но в <a class="link" href="bibliography.html" title="Приложение B. Библиография">библиографии</a> перечислено
+    но в библиографии перечислено
     множество книг, в которых его использование хорошо освещено.  Однако FreeBSD
     предоставляет более простой редактор <span class="application">ee</span>,
     который, если вы - новичок, подойдёт вам больше всего.  Не стесняйтесь
     изменять строки комментариев в начале файла, с тем, чтобы отобразить вашу
     конфигурацию или изменения, которые вы сделали по сравнению с
-    <code class="filename">GENERIC</code>.</p><a id="idp78487760" class="indexterm"></a><p>Если вам приходилось собирать ядро для <span class="trademark">SunOS</span>TM или какой-либо другой
+    <code class="filename">GENERIC</code>.</p><p>Если вам приходилось собирать ядро для <span class="trademark">SunOS</span>TM или какой-либо другой
     операционной системы типа BSD, многое из того, что содержится в этом
     файле будет очень знакомо вам.  Если же вы, напротив, использовали другую
     операционную систему, такую как DOS, файл конфигурации
     <code class="filename">GENERIC</code> может показаться вам крайне сложным, поэтому
-    следуйте инструкциям в разделе <a class="link" href="kernelconfig-config.html" title="9.6. Конфигурационный файл">Конфигурационный файл</a> медленно и
-    внимательно.</p><div xmlns="" class="note"><h3 class="admontitle">Примечание: </h3><p xmlns="http://www.w3.org/1999/xhtml">Если вы <a class="link" href="updating-upgrading.html" title="Глава 21. Обновление системы и смена версии">синхронизируете дерево исходных текстов</a>
+    следуйте инструкциям в разделе Конфигурационный файл медленно и
+    внимательно.</p><div xmlns="" class="note"><h3 class="admontitle">Примечание: </h3><p xmlns="http://www.w3.org/1999/xhtml">Если вы синхронизируете дерево исходных текстов
     с деревом проекта FreeBSD, не забудьте свериться с файлом
     <code class="filename">/usr/src/UPDATING</code> перед обновлением. В этом
     файле описаны все важные вопросы и области исходного кода, требующие
     особого внимания.
     <code class="filename">/usr/src/UPDATING</code> всегда соответствует версии
     ваших исходных текстов FreeBSD, поэтому является более актуальным
-    источником информации, чем это руководство.</p></div><p>Теперь вы должны скомпилировать ядро.</p><div class="procedure"><a id="idp78492496"></a><div class="procedure-title">Процедура 9.1. Сборка ядра</div><div xmlns="" class="note"><h3 class="admontitle">Примечание: </h3><p xmlns="http://www.w3.org/1999/xhtml">Для сборки ядра необходимо наличие всех исходных файлов
+    источником информации, чем это руководство.</p></div><p>Теперь вы должны скомпилировать ядро.</p><div class="procedure"><a id="idp78492496"></a><div class="procedure-title">Сборка ядра</div><div xmlns="" class="note"><h3 class="admontitle">Примечание: </h3><p xmlns="http://www.w3.org/1999/xhtml">Для сборки ядра необходимо наличие всех исходных файлов
     FreeBSD.</p></div><ol class="procedure" type="1"><li class="step"><p>Перейдите в каталог <code class="filename">/usr/src</code>:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>cd /usr/src</code></strong></pre></li><li class="step"><p>Соберите ядро:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>make buildkernel KERNCONF=<em class="replaceable"><code>MYKERNEL</code></em></code></strong></pre></li><li class="step"><p>Установите новое ядро:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>make installkernel KERNCONF=<em class="replaceable"><code>MYKERNEL</code></em></code></strong></pre></li></ol></div><div xmlns="" class="tip"><h3 class="admontitle">Подсказка: </h3><p xmlns="http://www.w3.org/1999/xhtml">По умолчанию, при построении ядра, <span class="emphasis"><em>все</em></span>
     модули ядра так же будут пересобраны.  Если вы хотите обновить
     ядро быстрее или построить только определённые модули, то вам
@@ -84,10 +83,10 @@
     <code class="filename">/boot/kernel.old/kernel</code>.
     Теперь перезагрузите систему для того,
     чтобы использовать новое ядро.  Если что-то пойдёт не так, вы
-    можете обратиться к разделу <a class="link" href="kernelconfig-trouble.html" title="9.7. Решение проблем">Решение проблем</a> в конце
+    можете обратиться к разделу Решение проблем в конце
     этой главы, который может оказаться
     полезен.  Не забудьте прочитать
-    раздел, который объясняет как исправить ситуацию, когда ядро <a class="link" href="kernelconfig-trouble.html#kernelconfig-noboot">не загружается</a>.</p><div xmlns="" class="note"><h3 class="admontitle">Примечание: </h3><p xmlns="http://www.w3.org/1999/xhtml">Другие файлы, относящиеся к
+    раздел, который объясняет как исправить ситуацию, когда ядро не загружается.</p><div xmlns="" class="note"><h3 class="admontitle">Примечание: </h3><p xmlns="http://www.w3.org/1999/xhtml">Другие файлы, относящиеся к
     процессу загрузки, такие как загрузчик (<a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=loader&amp;sektion=8"><span class="citerefentry"><span class="refentrytitle">loader</span>(8)</span></a>) и его
     конфигурационные файлы, размещаются в <code class="filename">/boot</code>.
     Модули сторонних производителей могут быть помещены в

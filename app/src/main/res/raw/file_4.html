@@ -1,16 +1,16 @@
 ﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=koi8-r" /><title>17.5. USB устройства хранения</title><link rel="stylesheet" type="text/css" href="docbook.css" /><link rev="made" href="mailto:doc@FreeBSD.org" /><meta name="generator" content="DocBook XSL Stylesheets V1.78.1" /><link rel="home" href="index.html" title="Руководство FreeBSD" /><link rel="up" href="disks.html" title="Глава 17. Устройства хранения" /><link rel="prev" href="raid.html" title="17.4. RAID" /><link rel="next" href="creating-cds.html" title="17.6. Запись и использование оптических носителей (CD)" /><link rel="copyright" href="legalnotice.html" title="Юридическое уведомление" /><script xmlns="" type="text/javascript" src="/layout/js/google.js"></script></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">USB устройства хранения</th></tr><tr><td width="20%" align="left"></td><th width="60%" align="center">Устройства хранения</th><td width="20%" align="right"></td></tr></table><hr /></div><div class="sect1"><div xmlns="" class="titlepage"><div><div><h2 xmlns="http://www.w3.org/1999/xhtml" class="title" style="clear: both"><a id="usb-disks"></a>USB устройства хранения</h2></div><div><span class="authorgroup">Предоставил <span xmlns="http://www.w3.org/1999/xhtml" class="author"><span class="firstname">Marc</span> <span class="surname">Fonvieille</span></span>. </span></div></div></div><a id="idp86851920" class="indexterm"></a><p>Множество современных устройств хранения используют Universal
     Serial Bus (USB): жесткие диски, брелоки USB, CD-R приводы,
-    и т.д.  FreeBSD предоставляет поддержку этих устройств.</p><div class="sect2"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="idp86853584"></a>17.5.1. Настройка</h3></div></div></div><p>Драйвер <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=umass&amp;sektion=4"><span class="citerefentry"><span class="refentrytitle">umass</span>(4)</span></a> предоставляет поддержку устройств
+    и т.д.  FreeBSD предоставляет поддержку этих устройств.</p><div class="sect2"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="idp86853584"></a> Настройка</h3></div></div></div><p>Драйвер <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=umass&amp;sektion=4"><span class="citerefentry"><span class="refentrytitle">umass</span>(4)</span></a> предоставляет поддержку устройств
     хранения USB.  Если вы используете <code class="filename">GENERIC</code>
     ядро, изменять что-либо в настройках не потребуется.  Если вы
     используете настроенное ядро, убедитесь, что в файле настройки
     присутствуют следующие строки:</p><pre class="programlisting">device scbus
-device da
-device pass
-device uhci
-device ohci
-device ehci
-device usb
+device da<br>
+device pass<br>
+device uhci<br>
+device ohci<br>
+device ehci<br>
+device usb<br>
 device umass</pre><p>Для доступа к устройствам хранения USB драйвер <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=umass&amp;sektion=4"><span class="citerefentry"><span class="refentrytitle">umass</span>(4)</span></a>
     использует подсистему SCSI, ваши устройства USB будут видны
     системе как SCSI устройства.  В зависимости от чипсета USB
@@ -24,20 +24,20 @@ device umass</pre><p>Для доступа к устройствам хране�
     необходимо добавить
     в ядро SCSI CD-ROM драйвер, <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=cd&amp;sektion=4"><span class="citerefentry"><span class="refentrytitle">cd</span>(4)</span></a>, следующей строкой:</p><pre xmlns="http://www.w3.org/1999/xhtml" class="programlisting">device cd</pre><p xmlns="http://www.w3.org/1999/xhtml">Поскольку устройство записи видно как SCSI диск, драйвер
     <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=atapicam&amp;sektion=4"><span class="citerefentry"><span class="refentrytitle">atapicam</span>(4)</span></a> не должен использоваться в файле
-    настройки.</p></div></div><div class="sect2"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="idp86862544"></a>17.5.2. Тестирование конфигурации</h3></div></div></div><p>Конфигурация готова к тестированию, подключите устройство USB,
+    настройки.</p></div></div><div class="sect2"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="idp86862544"></a> Тестирование конфигурации</h3></div></div></div><p>Конфигурация готова к тестированию, подключите устройство USB,
     и в буфере системных сообщений (<a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=dmesg&amp;sektion=8"><span class="citerefentry"><span class="refentrytitle">dmesg</span>(8)</span></a>), диск должен
-    отобразиться примерно так:</p><pre class="screen">umass0: USB Solid state disk, rev 1.10/1.00, addr 2
-GEOM: create disk da0 dp=0xc2d74850
-da0 at umass-sim0 bus 0 target 0 lun 0
-da0: &lt;Generic Traveling Disk 1.11&gt; Removable Direct Access SCSI-2 device
-da0: 1.000MB/s transfers
+    отобразиться примерно так:</p><pre class="screen">umass0: USB Solid state disk, rev 1.10/1.00, addr 2<br>
+GEOM: create disk da0 dp=0xc2d74850<br>
+da0 at umass-sim0 bus 0 target 0 lun 0<br>
+da0: &lt;Generic Traveling Disk 1.11&gt; Removable Direct Access SCSI-2 device<br>
+da0: 1.000MB/s transfers<br>
 da0: 126MB (258048 512 byte sectors: 64H 32S/T 126C)</pre><p>Конечно, производитель, имя устройства
     (<code class="filename">da0</code>) и другие детали могут
     отличаться в зависимости от конфигурации.</p><p>Поскольку устройство USB видится как SCSI, команда
     <code class="command">camcontrol</code> может быть использована для
     вывода списка устройств хранения USB, подключенных к системе:</p><pre class="screen"><code class="prompt">#</code> <strong class="userinput"><code>camcontrol devlist</code></strong>
 &lt;Generic Traveling Disk 1.11&gt;      at scbus0 target 0 lun 0 (da0,pass0)</pre><p>Если на диске есть файловая система, у вас должна быть
-    возможность смонтировать ее.  <a class="xref" href="disks-adding.html" title="17.3. Добавление дисков">Раздел 17.3, <<Добавление дисков>></a>
+    возможность смонтировать ее.
     поможет вам создать и отформатировать разделы на диске
     USB если потребуется.</p><div xmlns="" class="warning"><h3 class="admontitle">Предупреждение: </h3><p xmlns="http://www.w3.org/1999/xhtml">Ниже описанный механизм (<code class="literal">vfs.usermount</code>),
     допускающий монтирование случайных носителей пользователями,
@@ -75,12 +75,8 @@ add path 'da*' mode 0660 group operator</pre><div xmlns="" class="note"><h3 clas
     <code class="filename">/dev/da0s1</code>.  Поскольку эти устройства обычно поставляются
     форматированными с файловой системой FAT, их можно смонтировать так:</p><pre class="screen"><code class="prompt">%</code> <strong class="userinput"><code>mount -t msdosfs -o -m=644,-M=755 /dev/da0s1 /mnt/<em class="replaceable"><code>username</code></em></code></strong></pre><p>Если вы отключите устройство (диск должен быть сначала
     размонтирован), вы должны увидеть в буфере системных сообщений
-    что-то подобное:</p><pre class="screen">umass0: at uhub0 port 1 (addr 2) disconnected
-(da0:umass-sim0:0:0:0): lost device
-(da0:umass-sim0:0:0:0): removing device entry
-GEOM: destroy disk da0 dp=0xc2d74850
-umass0: detached</pre></div><div class="sect2"><div xmlns="" class="titlepage"><div><div><h3 xmlns="http://www.w3.org/1999/xhtml" class="title"><a id="idp86896336"></a>17.5.3. Дополнительная информация</h3></div></div></div><p>Помимо разделов <a class="link" href="disks-adding.html" title="17.3. Добавление дисков">Добавление
-    дисков</a> и <a class="link" href="mount-unmount.html" title="4.7. Монтирование и размонтирование файловых систем">Монтирование
-    и размонтирование файловых систем</a>, также может быть полезно
-    чтение различных страниц справочника: <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=umass&amp;sektion=4"><span class="citerefentry"><span class="refentrytitle">umass</span>(4)</span></a>,
-    <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=camcontrol&amp;sektion=8"><span class="citerefentry"><span class="refentrytitle">camcontrol</span>(8)</span></a>, и <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=usbconfig&amp;sektion=8"><span class="citerefentry"><span class="refentrytitle">usbconfig</span>(8)</span></a> для FreeBSD  8.X или <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=usbdevs&amp;sektion=8"><span class="citerefentry"><span class="refentrytitle">usbdevs</span>(8)</span></a> для более ранних версий FreeBSD.</p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"></body></html>
+    что-то подобное:</p><pre class="screen">umass0: at uhub0 port 1 (addr 2) disconnected<br>
+(da0:umass-sim0:0:0:0): lost device<br>
+(da0:umass-sim0:0:0:0): removing device entry<br>
+GEOM: destroy disk da0 dp=0xc2d74850<br>
+umass0: detached</pre></div><div class="sect2"><div xmlns="" class="titlepage"><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"></body></html>

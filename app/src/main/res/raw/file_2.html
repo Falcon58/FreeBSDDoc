@@ -16,8 +16,8 @@
     <code class="filename">/etc/rc.conf</code>, который вмещает только специфичную
     для данной системы информацию.</p><p>Поскольку <code class="filename">rc.conf</code> читается
     <a class="citerefentry" href="http://www.FreeBSD.org/cgi/man.cgi?query=sh&amp;sektion=1"><span class="citerefentry"><span class="refentrytitle">sh</span>(1)</span></a>, есть тривиальный способ сделать это. Например:</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem"><p>rc.conf:</p><pre class="programlisting">	. /etc/rc.conf.site
-	hostname="node15.example.com"
-	network_interfaces="fxp0 lo0"
+	hostname="node15.example.com"<br>
+	network_interfaces="fxp0 lo0"<br>
 	ifconfig_fxp0="inet 10.1.1.1"</pre></li><li class="listitem"><p>rc.conf.site:</p><pre class="programlisting">	defaultrouter="10.1.1.254"
 	saver="daemon"
 	blanktime="100"</pre></li></ul></div><p>Файл <code class="filename">rc.conf.site</code> может быть распространён
